@@ -1,5 +1,5 @@
-#ifndef MYFUNCTIONS_H
-#define MYFUNCTIONS_H
+#ifndef JNI_FUNCTIONS_H
+#define JNI_FUNCTIONS_H
 
 #include "Arduino.h"
 
