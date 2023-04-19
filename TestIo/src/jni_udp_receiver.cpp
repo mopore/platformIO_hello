@@ -4,7 +4,9 @@
 
 
 JniUdpReceiver::JniUdpReceiver() {
+	
 	packetsCounter = 0;
+	loopCounter = 0;
 }
 
 void JniUdpReceiver::setup() {
@@ -25,7 +27,8 @@ void JniUdpReceiver::setup() {
 
 void JniUdpReceiver::loop() {
 	delay(1000);
-	Serial.printf("packets/s: %d\n", packetsCounter);
+	loopCounter++;
+	Serial.printf("#%d packets/s: %d\n", loopCounter, packetsCounter);
 	if (packetsCounter > 0) {
 		digitalWrite(LED_BUILTIN, HIGH);
 	}
