@@ -1,7 +1,10 @@
-#ifndef JNI_UDP_RECEIVER_H
-#define JNI_UDP_RECEIVER_H
+#pragma once
 
-#include "Arduino.h"
+#include <Arduino.h>
+#include <AsyncUDP.h>
+
+#define UDP_RECEIVER_SOCKET_PORT 8888
+#define UDP_RECEIVER_PACKAGE_SIZE 4	
 
 
 class JniUdpReceiver {
@@ -9,6 +12,7 @@ class JniUdpReceiver {
 	 	JniUdpReceiver();
 		void setup();
 		void loop();
+	private:
+		AsyncUDP udp;
+		int packetsCounter;
 };
-
-#endif

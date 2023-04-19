@@ -2,20 +2,17 @@
 #include <Arduino.h>
 #include "jni_udp_receiver.h"
 
-const uint16_t SOCKET_PORT = 8080;
-const int PACKAGE_SIZE = 4;
-AsyncUDP udp;
-int packetsCounter = 0;
 
 JniUdpReceiver::JniUdpReceiver() {
+	packetsCounter = 0;
 }
 
 void JniUdpReceiver::setup() {
-	byte packetBuffer[PACKAGE_SIZE];
-	if (udp.listen(SOCKET_PORT)) {
+	byte packetBuffer[UDP_RECEIVER_PACKAGE_SIZE];
+	if (udp.listen(UDP_RECEIVER_SOCKET_PORT)) {
 		Serial.println("Listening...");
-		udp.onPacket([](AsyncUDPPacket packet) {
-			if (packet.length() == PACKAGE_SIZE) {
+		udp.onPacket([this](AsyncUDPPacket packet) {
+			if (packet.length() == UDP_RECEIVER_PACKAGE_SIZE) {
 				int16_t x = packet.data()[0] | packet.data()[1] << 8;
 				int16_t y = packet.data()[2] | packet.data()[3] << 8;
 				packetsCounter++;
