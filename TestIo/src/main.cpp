@@ -1,19 +1,59 @@
 #include <Arduino.h>
-#include "jni_wifi.h"
-#include "jni_functions.h"
-#include "jni_udp_receiver.h"
 
-JniUdpReceiver receiver;
+typedef struct {
+  int x;
+  int y;
+} Coordinates;
+
+
+volatile Coordinates coordinates;
+
+
+void receiverTask(void* pvParameters) {
+	const TickType_t xFrequency = pdMS_TO_TICKS(10); // .01 second	
+	int lastx = 0;
+	int lasty = 0;
+	while (true) {
+		lastx++;
+		if (lastx > 100) {
+			lastx = -100;
+			lasty++;
+		}
+		lasty--;
+		if (lasty < -100) {
+			lasty = 100;
+		}
+		coordinates.x = lastx;
+		coordinates.y = lasty;
+
+		vTaskDelay(xFrequency);
+	}
+}
+
+
+void printerTask(void* pvParameters) {
+	const TickType_t xFrequency = pdMS_TO_TICKS(1000); // 1 second	
+
+	while (true) {
+		Serial.print("x: ");
+		Serial.print(coordinates.x);
+		Serial.print(" y: ");
+		Serial.println(coordinates.y);
+
+		vTaskDelay(xFrequency);
+	}
+}
+
 
 void setup() {
 	Serial.begin(115200);
-	pinMode(LED_BUILTIN, OUTPUT);
-	digitalWrite(LED_BUILTIN, HIGH);	
-	connect_wifi();
-	digitalWrite(LED_BUILTIN, LOW);	
-	receiver.setup();
+
+	// This will automatically deploy the task on both cores.
+	xTaskCreate(receiverTask, "receiverTask", 4096, NULL, 1, NULL);
+	xTaskCreate(printerTask, "printerTask", 4096, NULL, 1, NULL);
 }
 
+
 void loop() {
-	receiver.loop();
+	// We will leave this empty.
 }
