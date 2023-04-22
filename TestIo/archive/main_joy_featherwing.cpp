@@ -46,14 +46,14 @@ void buttonCallback(FJBUTTON* buttons, uint8_t count){
 
 
 void setup() {
+	Serial.begin(115200);
+	while (!Serial);
+
 	buttonNames[BUTTON_DOWN] = "DOWN";
 	buttonNames[BUTTON_UP] = "UP";
 	buttonNames[BUTTON_LEFT] = "LEFT";
 	buttonNames[BUTTON_RIGHT] = "RIGHT";
 	buttonNames[BUTTON_SEL] = "SELECT";
-
-	Serial.begin(115200);
-	while (!Serial);
 
 	Serial.println("FeatherJoyWing test");
 	joy.begin();
