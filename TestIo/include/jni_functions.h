@@ -1,5 +1,4 @@
-#ifndef JNI_FUNCTIONS_H
-#define JNI_FUNCTIONS_H
+#pragma once
 
 #include "Arduino.h"
 
@@ -14,5 +13,3 @@ class Person {
 		String _name;
 		int _age;
 };
-
-#endif

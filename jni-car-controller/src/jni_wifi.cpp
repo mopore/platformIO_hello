@@ -21,7 +21,7 @@
 #include "lwip/err.h"
 #include "lwip/sys.h"
 
-static IPAddress connectedIpAddress;
+IPAddress connectedIpAddress;
 
 /* The examples use WiFi configuration that you can set via project configuration menu
 
