@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "jni-car-controller",
+			"path": "../jni-car-controller"
+		}
+	],
+	"settings": {}
+}

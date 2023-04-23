@@ -3,7 +3,8 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SH110X.h>
-#include <Fonts/FreeMono9pt7b.h>
+#include "jni_controller_display.h"
+
 
 #define COORDINATE_X_COL 0
 #define COORDINATE_Y_COL 35
@@ -13,8 +14,10 @@ Adafruit_SH1107 display = Adafruit_SH1107(64, 128, &Wire);
 GFXcanvas1 xCanvas = GFXcanvas1(COORDINATE_WIDTH, 10);
 GFXcanvas1 yCanvas = GFXcanvas1(COORDINATE_WIDTH, 10);
 
+
 int x = -100;
 int y = 100;
+ControllerDisplay controllerDisplay;
 
 void setup() {
 	Serial.begin(115200);
