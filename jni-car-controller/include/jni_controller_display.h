@@ -6,8 +6,9 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SH110X.h>
 #include <Fonts/FreeMono9pt7b.h>
-#include "jni_controller_display.h"
+#include "jni_input_reader.h"
 
+extern volatile CarInput carInput;
 
 class ControllerDisplay {
 	public:
