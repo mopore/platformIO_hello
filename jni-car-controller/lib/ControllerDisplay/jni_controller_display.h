@@ -5,8 +5,7 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SH110X.h>
-#include <Fonts/FreeMono9pt7b.h>
-#include "jni_input_reader.h"
+// #include <Fonts/FreeMono9pt7b.h>
 #include "jni_shared_types.h"
 
 
