@@ -1,13 +1,7 @@
 #pragma once
 #include <Arduino.h>
+#include "jni_shared_types.h"
 
-typedef struct {
-  int16_t x;
-  int16_t y;
-} CarInput;
-
-
-volatile CarInput carInput;
 
 class InputReader {
 	public:
