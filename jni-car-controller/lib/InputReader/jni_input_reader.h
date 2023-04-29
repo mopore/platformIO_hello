@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include "jni_shared_types.h"
 #include "FeatherJoyWing.h"
+#include "jni_udp_sender.h"
 
 
 class InputReader {
@@ -20,6 +21,7 @@ class InputReader {
 		int16_t m_lasty;
 		Adafruit_seesaw m_seesaw;
 		FeatherJoyWing m_joy;
+		JniUdpSender m_udpSender;
 		
 		static std::map<uint8_t, String> buttonNames;
 		static InputReader* s_instance;  // Used to pass callback events.

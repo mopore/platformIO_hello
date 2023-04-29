@@ -16,7 +16,8 @@ std::map<uint8_t, String> InputReader::buttonNames;
 
 InputReader::InputReader() :
 	m_seesaw(),
-	m_joy(m_seesaw)
+	m_joy(m_seesaw),
+	m_udpSender()
 {
 	m_lastx = 0;
 	m_lastx = 0;
@@ -80,6 +81,7 @@ void InputReader::setup() {
 	m_joy.begin();	
 	m_joy.registerJoystickCallback(&InputReader::onJoystickEvent);
 	m_joy.registerButtonCallback(&InputReader::onButtonEvent);
+	m_udpSender.setup();
 }
 
 
@@ -87,4 +89,5 @@ void InputReader::loop() {
 	carInput.x = m_lastx;
 	carInput.y = m_lasty;
 	m_joy.update();
+	m_udpSender.send(m_lastx, m_lasty);
 }
