@@ -3,10 +3,6 @@
 #include <Arduino.h>
 #include <WiFiUdp.h>
 
-#define UDP_RECEIVER_SOCKET_IP "192.168.199.245"
-#define UDP_RECEIVER_SOCKET_PORT 8080
-#define UDP_RECEIVER_PACKAGE_SIZE 4	
-
 
 class JniUdpSender {
 	public:
@@ -15,8 +11,9 @@ class JniUdpSender {
 		void loop();
 	private:
 		void updateXY();
+		void send(int16_t x, int16_t y);
 		ulong m_previousMillis;
 		int16_t m_x;
 		int16_t m_y;
-		WiFiUDP udp;
+		WiFiUDP m_udp;
 };

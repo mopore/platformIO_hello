@@ -1,7 +1,8 @@
-#include <Arduino.h>
-#include <WiFi.h>
-#include <WiFiUdp.h>
 #include "jni_udp_sender.h"
+
+#define UDP_RECEIVER_SOCKET_IP "192.168.199.245"
+#define UDP_RECEIVER_SOCKET_PORT 8080
+#define UDP_RECEIVER_PACKAGE_SIZE 4	
 
 
 JniUdpSender::JniUdpSender() {
@@ -12,7 +13,7 @@ JniUdpSender::JniUdpSender() {
 
 
 void JniUdpSender::setup() {
-	udp.begin(UDP_RECEIVER_SOCKET_PORT);
+	m_udp.begin(UDP_RECEIVER_SOCKET_PORT);
 
 }
 
@@ -21,20 +22,24 @@ void JniUdpSender::loop() {
     const unsigned long SEND_INTERVAL_MS = 10; // 0.01 seconds
     unsigned long currentMillis = millis();
     if (currentMillis - m_previousMillis >= SEND_INTERVAL_MS) {
-        byte packetBuffer[4];
-        packetBuffer[0] = m_x & 0xFF;
-        packetBuffer[1] = (m_x >> 8) & 0xFF;
-        packetBuffer[2] = m_y & 0xFF;
-        packetBuffer[3] = (m_y >> 8) & 0xFF;
-
-		udp.beginPacket(UDP_RECEIVER_SOCKET_IP, UDP_RECEIVER_SOCKET_PORT);
-		udp.write(packetBuffer, 4);
-		udp.endPacket();
-
+        send(m_x, m_y);
         updateXY();
         m_previousMillis = currentMillis;
 		Serial.printf("x: %d, y: %d\n", m_x, m_y);
     }
+}
+
+
+void JniUdpSender::send(int16_t x, int16_t y){
+        byte packetBuffer[4];
+        packetBuffer[0] = x & 0xFF;
+        packetBuffer[1] = (x >> 8) & 0xFF;
+        packetBuffer[2] = y & 0xFF;
+        packetBuffer[3] = (y >> 8) & 0xFF;
+
+		m_udp.beginPacket(UDP_RECEIVER_SOCKET_IP, UDP_RECEIVER_SOCKET_PORT);
+		m_udp.write(packetBuffer, 4);
+		m_udp.endPacket();
 }
 
 

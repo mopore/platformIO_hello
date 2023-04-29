@@ -3,11 +3,11 @@
 #include <Adafruit_I2CDevice.h>
 
 #include "jni_wifi.h"
-#include "jni_udp_receiver.h"
+#include "jni_udp_sender.h"
 
 static const char* ssid = "Loxodonta";
 static const char* password = "witch7%Carton%Driller%Bluish";
-static JniUdpReceiver receiver;
+static JniUdpSender sender;
 
 
 void setup() {
@@ -17,10 +17,11 @@ void setup() {
 	String ip = connect_wifi();
 	Serial.println(ip);
 	digitalWrite(LED_BUILTIN, LOW);	
-	receiver.setup();
+
+	sender.setup();
 }
 
 
 void loop() {
-	receiver.loop();
+	sender.loop();
 }
