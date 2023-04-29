@@ -15,11 +15,10 @@ ControllerDisplay::ControllerDisplay() {
 
 
 void ControllerDisplay::setup() {
-	Serial.println("128x64 OLED FeatherWing test");
 	delay(250); // wait for the OLED to power up
 	display.begin(0x3C, true); // Address 0x3C default
 
-	Serial.println("OLED begun");
+	Serial.println("OLED is online.");
 
 	// Show image buffer on the display hardware.
 	// Since the buffer is intialized with an Adafruit splashscreen

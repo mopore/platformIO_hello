@@ -39,6 +39,7 @@ void setup() {
 	pinMode(LED_BUILTIN, OUTPUT);
 	digitalWrite(LED_BUILTIN, HIGH);	
 	String ip = connect_wifi();
+	Serial.print("JNI Car Controller IP address: ");
 	Serial.println(ip);
 	digitalWrite(LED_BUILTIN, LOW);	
 
