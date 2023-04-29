@@ -19,21 +19,21 @@ void joystickCallback(int8_t xIn, int8_t yIn){
 	int xOut = 0;
 	int yOut = 0;
 	if (xIn > 0) {
-		xOut = ((float)xIn / Y_MAX) * 100;
+		xOut = ((float)xIn / X_MAX) * 100;
 	} else {
-		xOut = ((float)xIn / Y_MIN) * -100;
+		xOut = ((float)xIn / X_MIN) * -100;
 	}
 	if (yIn > 0) {
 		yOut = ((float)yIn / Y_MAX) * 100;
 	} else {
 		yOut = ((float)yIn / Y_MIN) * -100;
 	}
-    Serial.print(xOut); Serial.print(" : "); Serial.println(yOut);
+	Serial.print(xOut); Serial.print(" : "); Serial.println(yOut);
 }
 
 
 void buttonCallback(FJBUTTON* buttons, uint8_t count){
-    for(int i = 0; i < count; i++) {
+	for(int i = 0; i < count; i++) {
 		if (buttons[i].hasChanged) {
 			Serial.print("Button ");
 			String buttonName = buttonNames[buttons[i].pinId];
@@ -41,7 +41,7 @@ void buttonCallback(FJBUTTON* buttons, uint8_t count){
 			Serial.print(": ");
 			Serial.println(buttons[i].pressed);
 		}
-    }
+	}
 }
 
 
@@ -57,8 +57,8 @@ void setup() {
 
 	Serial.println("FeatherJoyWing test");
 	joy.begin();
-    joy.registerJoystickCallback(joystickCallback);
-    joy.registerButtonCallback(buttonCallback);
+	joy.registerJoystickCallback(joystickCallback);
+	joy.registerButtonCallback(buttonCallback);
 }
 
 
