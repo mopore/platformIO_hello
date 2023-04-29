@@ -32,8 +32,8 @@ void displayTask(void* pvParameters) {
 
 void setup() {
 	Serial.begin(115200);
-	xTaskCreate(displayTask, "receiverTask", 4096, NULL, 1, NULL);
-	xTaskCreate(readInputTask, "printerTask", 4096, NULL, 1, NULL);	
+	xTaskCreate(displayTask, "displayTask", 4096, NULL, 1, NULL);
+	xTaskCreate(readInputTask, "readInputTask", 4096, NULL, 1, NULL);	
 
 	// // Set the core manually.
 	// // TODO: Check if this is good Idea. A Spiess says Wifi is at code 1 usually...
