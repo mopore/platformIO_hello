@@ -6,6 +6,10 @@
 		{
 			"name": "jni-car-controller",
 			"path": "../jni-car-controller"
+		},
+		{
+			"name": "jni-car-base",
+			"path": "../jni-car-base"
 		}
 	],
 	"settings": {}
