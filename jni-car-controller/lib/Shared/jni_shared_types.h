@@ -8,3 +8,10 @@ typedef struct {
 } CarInput;
 
 extern volatile CarInput carInput;
+
+typedef struct {
+  bool usbPowerPresent;
+  float batteryVoltage;
+} PowerStatus;
+
+extern volatile PowerStatus powerStatus;

@@ -5,10 +5,13 @@
 #define COORDINATE_Y_COL 35
 #define COORDINATE_WIDTH 30
 
+#define BAT_COL 70
+#define BAT_WIDTH 30
+
 static Adafruit_SH1107 display = Adafruit_SH1107(64, 128, &Wire);
 static GFXcanvas1 xCanvas = GFXcanvas1(COORDINATE_WIDTH, 10);
 static GFXcanvas1 yCanvas = GFXcanvas1(COORDINATE_WIDTH, 10);
-
+static GFXcanvas1 batCanvas = GFXcanvas1(BAT_WIDTH, 10);
 
 ControllerDisplay::ControllerDisplay() {
 }
@@ -27,21 +30,23 @@ void ControllerDisplay::setup() {
 	display.display();
 	delay(1000);
 
-	// Clear the buffer.
+	// General setup
 	display.clearDisplay();
 	display.display();
-
 	display.setRotation(1);
-
-	// text display tests
 	display.setTextSize(1);
 	display.setTextColor(SH110X_WHITE);
 
+	// Draw coordinate labels
 	display.setCursor(COORDINATE_X_COL,0);
 	display.print("X:");
-
 	display.setCursor(COORDINATE_Y_COL,0);
 	display.print("Y:");
+
+	// Draw battery label
+	display.setCursor(BAT_COL,0);
+	display.print("BAT:");
+
 	display.display();
 }
 
@@ -65,6 +70,28 @@ void ControllerDisplay::loop() {
 		COORDINATE_Y_COL, 10, 
 		yCanvas.getBuffer(), 
 		COORDINATE_WIDTH, 10, 
+		SH110X_WHITE, SH110X_BLACK
+	);
+
+	batCanvas.fillScreen(0);
+	batCanvas.setCursor(0,0);
+	if (powerStatus.usbPowerPresent) {
+		batCanvas.printf("USB");
+	}
+	else if (powerStatus.batteryVoltage < 3.3) {
+		batCanvas.printf("LOW");
+	}
+	else if (powerStatus.batteryVoltage < 3.5) {
+		batCanvas.printf("MED");
+	}
+	else {
+		batCanvas.printf("HIGH");
+	}
+	// batCanvas.printf("%.1fV", powerStatus.batteryVoltage);
+	display.drawBitmap(
+		BAT_COL, 10, 
+		batCanvas.getBuffer(), 
+		BAT_WIDTH, 10, 
 		SH110X_WHITE, SH110X_BLACK
 	);
 
