@@ -10,10 +10,6 @@
 #define FREQ_5_SECS 5000
 
 
-static const char* ssid = "Loxodonta";
-static const char* password = "witch7%Carton%Driller%Bluish";
-
-
 void readInputTask(void* pvParameters) {
 	const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_100_HZ);
 	InputReader inputReader;
