@@ -34,7 +34,6 @@ void readPowerTask(void* pvParameters) {
 	PowerReader powerReader;
 	powerReader.setup();
 	while (true) {
-		Serial.println("Power reader task");
 		powerReader.updatePowerStatus();
 		vTaskDelay(xFrequency);
 	}
