@@ -20,8 +20,11 @@
 
 #include "lwip/err.h"
 #include "lwip/sys.h"
+#include "jni_wifi.h"
 
-IPAddress connectedIpAddress;
+static IPAddress connectedIpAddress;
+
+
 
 /* The examples use WiFi configuration that you can set via project configuration menu
 

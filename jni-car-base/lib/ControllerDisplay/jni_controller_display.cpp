@@ -8,10 +8,23 @@
 #define BAT_COL 70
 #define BAT_WIDTH 30
 
+#define IP_COL 0
+
+#define NO_CONNECTION "<No Connection>"
+#define LABEL_IP "IP: "
+#define LABEL_BAT "BAT: "
+#define LABEL_X "X: "
+#define LABEL_Y "Y: "
+#define TEXT_USB "USB"
+#define TEXT_LOW "LOW"
+#define TEXT_MED "MED"
+#define TEXT_HIGH "HIGH"
+
 static Adafruit_SH1107 display = Adafruit_SH1107(64, 128, &Wire);
 static GFXcanvas1 xCanvas = GFXcanvas1(COORDINATE_WIDTH, 10);
 static GFXcanvas1 yCanvas = GFXcanvas1(COORDINATE_WIDTH, 10);
 static GFXcanvas1 batCanvas = GFXcanvas1(BAT_WIDTH, 10);
+static GFXcanvas1 ipCanvas = GFXcanvas1(128, 10);
 
 ControllerDisplay::ControllerDisplay() {
 }
@@ -39,13 +52,17 @@ void ControllerDisplay::setup() {
 
 	// Draw coordinate labels
 	display.setCursor(COORDINATE_X_COL,0);
-	display.print("X:");
+	display.print(LABEL_X);
 	display.setCursor(COORDINATE_Y_COL,0);
-	display.print("Y:");
+	display.print(LABEL_Y);
 
 	// Draw battery label
 	display.setCursor(BAT_COL,0);
-	display.print("BAT:");
+	display.print(LABEL_BAT);
+
+	// Draw IP label
+	display.setCursor(IP_COL, 40);
+	display.print(LABEL_IP);
 
 	display.display();
 }
@@ -53,6 +70,7 @@ void ControllerDisplay::setup() {
 
 void ControllerDisplay::loop() {
 
+	// Draw the X coordinate
 	xCanvas.fillScreen(0);
 	xCanvas.setCursor(0,0);
 	xCanvas.printf("%d%%", carInput.x);
@@ -63,6 +81,7 @@ void ControllerDisplay::loop() {
 		SH110X_WHITE, SH110X_BLACK
 	);
 
+	// Draw the Y coordinate
 	yCanvas.fillScreen(0);
 	yCanvas.setCursor(0,0);
 	yCanvas.printf("%d%%", carInput.y);
@@ -73,25 +92,42 @@ void ControllerDisplay::loop() {
 		SH110X_WHITE, SH110X_BLACK
 	);
 
+	// Draw the battery status
 	batCanvas.fillScreen(0);
 	batCanvas.setCursor(0,0);
 	if (powerStatus.usbPowerPresent) {
-		batCanvas.printf("USB");
+		batCanvas.printf(TEXT_USB);
 	}
 	else if (powerStatus.batteryVoltage < 3.3) {
-		batCanvas.printf("LOW");
+		batCanvas.printf(TEXT_LOW);
 	}
 	else if (powerStatus.batteryVoltage < 3.5) {
-		batCanvas.printf("MED");
+		batCanvas.printf(TEXT_MED);
 	}
 	else {
-		batCanvas.printf("HIGH");
+		batCanvas.printf(TEXT_HIGH);
 	}
-	// batCanvas.printf("%.1fV", powerStatus.batteryVoltage);
 	display.drawBitmap(
 		BAT_COL, 10, 
 		batCanvas.getBuffer(), 
 		BAT_WIDTH, 10, 
+		SH110X_WHITE, SH110X_BLACK
+	);
+
+	// Draw the IP address
+	ipCanvas.fillScreen(0);
+	ipCanvas.setCursor(0,0);
+	if (wifiStatus.isWifiConnected) {
+		String ip = getIP_v4Status();
+		ipCanvas.print(ip);
+	}
+	else {
+		ipCanvas.printf(NO_CONNECTION);
+	}
+	display.drawBitmap(
+		IP_COL, 50, 
+		ipCanvas.getBuffer(), 
+		128, 10, 
 		SH110X_WHITE, SH110X_BLACK
 	);
 

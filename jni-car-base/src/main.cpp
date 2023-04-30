@@ -3,6 +3,7 @@
 #include "jni_controller_display.h"
 #include "jni_input_reader.h"
 #include "jni_power_reader.h"
+#include "jni_wifi.h"
 
 
 void readInputTask(void* pvParameters) {
@@ -42,9 +43,17 @@ void readPowerTask(void* pvParameters) {
 
 void setup() {
 	Serial.begin(115200);
+	wifiStatus.isWifiConnected = false;
+	setIP_v4Status(NO_IP);
 
-	xTaskCreate(displayTask, "receiverTask", 4096, NULL, 1, NULL);
-	xTaskCreate(readInputTask, "printerTask", 4096, NULL, 1, NULL);	
+	String ip = connect_wifi();
+	if (ip != NO_IP) {
+		setIP_v4Status(ip);
+		wifiStatus.isWifiConnected = true;
+	}
+	
+	xTaskCreate(displayTask, "displayTask", 4096, NULL, 1, NULL);
+	xTaskCreate(readInputTask, "readInputTask", 4096, NULL, 1, NULL);	
 	xTaskCreate(readPowerTask, "readPowerTask", 4096, NULL, 1, NULL);
 }
 

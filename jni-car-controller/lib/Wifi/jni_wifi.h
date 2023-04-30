@@ -1,5 +1,4 @@
 #pragma once
-
 #include <Arduino.h>
 
 #define JNI_ESP_WIFI_SSID      "Loxodonta"
