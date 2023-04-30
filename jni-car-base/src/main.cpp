@@ -4,6 +4,7 @@
 #include "jni_input_reader.h"
 #include "jni_power_reader.h"
 #include "jni_wifi.h"
+#include "jni_udp_receiver.h"
 
 
 void readInputTask(void* pvParameters) {
@@ -50,6 +51,7 @@ void setup() {
 	if (ip != NO_IP) {
 		setIP_v4Status(ip);
 		wifiStatus.isWifiConnected = true;
+
 	}
 	
 	xTaskCreate(displayTask, "displayTask", 4096, NULL, 1, NULL);
