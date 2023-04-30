@@ -47,12 +47,14 @@ void readPowerTask(void* pvParameters) {
 
 void setup() {
 	Serial.begin(115200);
-	pinMode(LED_BUILTIN, OUTPUT);
-	digitalWrite(LED_BUILTIN, HIGH);	
+	wifiStatus.isWifiConnected = false;
+	setIP_v4Status(NO_IP);
+
 	String ip = connect_wifi();
-	Serial.print("JNI Car Controller IP address: ");
-	Serial.println(ip);
-	digitalWrite(LED_BUILTIN, LOW);	
+	if (ip != NO_IP) {
+		setIP_v4Status(ip);
+		wifiStatus.isWifiConnected = true;
+	}
 
 	xTaskCreate(displayTask, "displayTask", 4096, NULL, 1, NULL);
 	xTaskCreate(readInputTask, "readInputTask", 4096, NULL, 1, NULL);	

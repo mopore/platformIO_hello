@@ -1,6 +1,7 @@
 #include "jni_udp_sender.h"
 
-#define UDP_RECEIVER_SOCKET_IP "192.168.199.245"
+#define UDP_RECEIVER_SOCKET_IP "192.168.199.240"  // Test Rig
+// #define UDP_RECEIVER_SOCKET_IP "192.168.199.245"  // NZXT Linux PC
 #define UDP_RECEIVER_SOCKET_PORT 8080
 #define UDP_RECEIVER_PACKAGE_SIZE 4	
 
