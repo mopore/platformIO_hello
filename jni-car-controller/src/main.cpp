@@ -2,16 +2,20 @@
 #include "jni_shared_types.h"
 #include "jni_controller_display.h"
 #include "jni_input_reader.h"
+#include "jni_power_reader.h"
 #include "jni_wifi.h"
+
+#define FREQ_100_HZ 10
+#define FREQ_10_HZ 100
+#define FREQ_5_SECS 5000
+
 
 static const char* ssid = "Loxodonta";
 static const char* password = "witch7%Carton%Driller%Bluish";
 
-volatile CarInput carInput;
-
 
 void readInputTask(void* pvParameters) {
-	const TickType_t xFrequency = pdMS_TO_TICKS(10); // .01 second	
+	const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_100_HZ);
 	InputReader inputReader;
 	inputReader.setup();
 	while (true) {
@@ -22,13 +26,24 @@ void readInputTask(void* pvParameters) {
 
 
 void displayTask(void* pvParameters) {
-	const TickType_t xFrequency = pdMS_TO_TICKS(100);
+	const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_10_HZ);
 
 	ControllerDisplay controllerDisplay;
 	controllerDisplay.setup();
 	
 	while(true) {
 		controllerDisplay.loop();
+		vTaskDelay(xFrequency);
+	}
+}
+
+
+void readPowerTask(void* pvParameters) {
+	const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_5_SECS);
+	PowerReader powerReader;
+	powerReader.setup();
+	while (true) {
+		powerReader.updatePowerStatus();
 		vTaskDelay(xFrequency);
 	}
 }
@@ -45,6 +60,7 @@ void setup() {
 
 	xTaskCreate(displayTask, "displayTask", 4096, NULL, 1, NULL);
 	xTaskCreate(readInputTask, "readInputTask", 4096, NULL, 1, NULL);	
+	xTaskCreate(readPowerTask, "readPowerTask", 4096, NULL, 1, NULL);
 }
 
 void loop() {

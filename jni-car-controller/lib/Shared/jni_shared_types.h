@@ -9,6 +9,7 @@ typedef struct {
 
 extern volatile CarInput carInput;
 
+
 typedef struct {
   bool usbPowerPresent;
   float batteryVoltage;
