@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include "jni_wifi.h"
-#include "jni_functions.h"
 #include "jni_udp_receiver.h"
 
 JniUdpReceiver receiver;
