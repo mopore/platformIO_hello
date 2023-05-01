@@ -1,17 +1,19 @@
 #include "jni_udp_sender.h"
 
-#define UDP_RECEIVER_SOCKET_IP "192.168.199.240"  // Test Rig
-// #define UDP_RECEIVER_SOCKET_IP "192.168.199.245"  // NZXT Linux PC
-#define UDP_RECEIVER_SOCKET_PORT 8080
 #define UDP_RECEIVER_PACKAGE_SIZE 4	
 
 
-JniUdpSender::JniUdpSender() {
+JniUdpSender::JniUdpSender(
+    const std::string& udp_target_ip,
+    const uint16_t udp_target_port
+):
+    m_udp_target_ip(udp_target_ip),
+    m_udp_target_port(udp_target_port){
 }
 
 
 void JniUdpSender::setup() {
-	m_udp.begin(UDP_RECEIVER_SOCKET_PORT);
+	m_udp.begin(m_udp_target_port);
 
 }
 
@@ -23,7 +25,7 @@ void JniUdpSender::send(int16_t x, int16_t y){
         packetBuffer[2] = y & 0xFF;
         packetBuffer[3] = (y >> 8) & 0xFF;
 
-		m_udp.beginPacket(UDP_RECEIVER_SOCKET_IP, UDP_RECEIVER_SOCKET_PORT);
+		m_udp.beginPacket(m_udp_target_ip.c_str(), m_udp_target_port);
 		m_udp.write(packetBuffer, 4);
 		m_udp.endPacket();
 }

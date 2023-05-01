@@ -30,4 +30,4 @@ typedef struct {
 extern volatile WifiStatus wifiStatus;
 
 void setWifiStatusIP_v4(const std::string &ipv4);
-std::string getWifiStatusIP_v4();
+const std::string getWifiStatusIP_v4();

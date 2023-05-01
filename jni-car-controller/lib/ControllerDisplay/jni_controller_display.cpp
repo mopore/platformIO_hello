@@ -33,18 +33,16 @@ static Adafruit_SH1107 display = Adafruit_SH1107(64, 128, &Wire);
 static GFXcanvas1 xCanvas = GFXcanvas1(COORDINATE_WIDTH, 10);
 static GFXcanvas1 yCanvas = GFXcanvas1(COORDINATE_WIDTH, 10);
 static GFXcanvas1 batCanvas = GFXcanvas1(BAT_WIDTH, 10);
-static GFXcanvas1 ipCanvas = GFXcanvas1(128, 10);
 
-ControllerDisplay::ControllerDisplay() {
+ControllerDisplay::ControllerDisplay(const std::string& target_ipv4)
+    : m_target_ipv4(target_ipv4) {
 }
 
 
 void ControllerDisplay::setup() {
-	Serial.println("128x64 OLED FeatherWing test");
 	delay(250); // wait for the OLED to power up
 	display.begin(0x3C, true); // Address 0x3C default
-
-	Serial.println("OLED begun");
+	Serial.println("OLED is online.");
 
 	// Show image buffer on the display hardware.
 	// Since the buffer is intialized with an Adafruit splashscreen
@@ -77,6 +75,10 @@ void ControllerDisplay::setup() {
 	// Draw IP label
 	display.setCursor(IP_COL, LABEL_IP_Y);
 	display.print(LABEL_IP);
+
+	// Draw the target IP address
+	display.setCursor(IP_COL, VALUE_IP_Y);
+	display.print(m_target_ipv4.c_str());
 
 	display.display();
 }
@@ -125,23 +127,6 @@ void ControllerDisplay::loop() {
 		BAT_COL, VALUES_Y, 
 		batCanvas.getBuffer(), 
 		BAT_WIDTH, 10, 
-		SH110X_WHITE, SH110X_BLACK
-	);
-
-	// Draw the IP address
-	ipCanvas.fillScreen(0);
-	ipCanvas.setCursor(0,0);
-	if (wifiStatus.isWifiConnected) {
-		auto ip_v4 = getWifiStatusIP_v4().c_str();
-		ipCanvas.print(ip_v4);
-	}
-	else {
-		ipCanvas.printf(NO_CONNECTION);
-	}
-	display.drawBitmap(
-		IP_COL, VALUE_IP_Y, 
-		ipCanvas.getBuffer(), 
-		128, 10, 
 		SH110X_WHITE, SH110X_BLACK
 	);
 

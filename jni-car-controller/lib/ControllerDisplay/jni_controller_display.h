@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <string>
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -11,7 +12,9 @@
 
 class ControllerDisplay {
 	public:
-		ControllerDisplay();
+		explicit ControllerDisplay(const std::string& target_ipv4);
 		void setup();
 		void loop();
+	private:
+		const std::string m_target_ipv4;
 };

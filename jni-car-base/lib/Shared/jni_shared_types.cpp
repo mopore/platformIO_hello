@@ -18,7 +18,7 @@ void setWifiStatusIP_v4(const std::string &ipv4) {
 }
 
 
-std::string getWifiStatusIP_v4() {
+const std::string getWifiStatusIP_v4() {
 	// Cast away volatile qualifier to allow access
 	const WifiStatus *non_volatile_wifiStatus = const_cast<const WifiStatus *>(&wifiStatus);
 	return non_volatile_wifiStatus->ip_v4;

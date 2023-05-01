@@ -9,7 +9,7 @@
 
 void readInputTask(void* pvParameters) {
 	const TickType_t xFrequency = pdMS_TO_TICKS(10); // .01 second	
-	InputReader inputReader;
+	InputController inputReader;
 
 	inputReader.setup();
 	while (true) {

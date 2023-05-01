@@ -6,9 +6,9 @@
 #include "jni_udp_sender.h"
 
 
-class InputReader {
+class InputController {
 	public:
-		InputReader();
+		explicit InputController(const JniUdpSender& udpSender);
 		void setup();
 		void loop();
 
@@ -24,7 +24,7 @@ class InputReader {
 		JniUdpSender m_udpSender;
 		
 		static std::map<uint8_t, String> buttonNames;
-		static InputReader* s_instance;  // Used to pass callback events.
+		static InputController* s_instance;  // Used to pass callback events.
 
 		void handleJoystickEvent(int8_t xIn, int8_t yIn);
 		void handleButtonEvent(FJBUTTON* buttons, uint8_t count);

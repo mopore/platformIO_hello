@@ -1,14 +1,14 @@
 #include "jni_input_reader.h"
 
-InputReader::InputReader() {
+InputController::InputController() {
 }
 
 
-void InputReader::setup() {
+void InputController::setup() {
 	m_udpReceiver.setup();
 }
 
 
-void InputReader::loop() {
+void InputController::loop() {
 	// Nothing to do here
 }

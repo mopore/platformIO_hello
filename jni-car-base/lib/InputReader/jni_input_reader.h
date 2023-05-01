@@ -4,9 +4,9 @@
 #include "jni_udp_receiver.h"
 
 
-class InputReader {
+class InputController {
 	public:
-		InputReader();
+		InputController();
 		void setup();
 		void loop();
 	private:
