@@ -3,7 +3,6 @@
 #include <Arduino.h>
 #include <string>
 
-#define NO_IP "0.0.0.0"
 
 
 typedef struct {

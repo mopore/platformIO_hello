@@ -12,5 +12,9 @@
 			"path": "../jni-car-base"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			"string": "cpp"
+		}
+	}
 }
