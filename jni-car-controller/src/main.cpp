@@ -13,8 +13,7 @@
 
 void readInputTask(void* pvParameters) {
 	const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_100_HZ);
-	const JniUdpSender udpSender(UDP_RECEIVER_SOCKET_IP, UDP_RECEIVER_SOCKET_PORT);
-	InputController inputController(udpSender);
+	InputController inputController(UDP_RECEIVER_SOCKET_IP, UDP_RECEIVER_SOCKET_PORT);
 	inputController.setup();
 	while (true) {
 		inputController.loop();

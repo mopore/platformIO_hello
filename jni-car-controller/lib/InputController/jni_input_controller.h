@@ -8,7 +8,10 @@
 
 class InputController {
 	public:
-		explicit InputController(const JniUdpSender& udpSender);
+		explicit InputController(
+			const std::string& udp_target_ip,
+			const uint16_t udp_target_port
+		);
 		void setup();
 		void loop();
 

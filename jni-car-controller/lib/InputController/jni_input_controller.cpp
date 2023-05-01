@@ -15,11 +15,12 @@ std::map<uint8_t, String> InputController::buttonNames;
 
 
 InputController::InputController(
-	const JniUdpSender& udpSender
+	const std::string& udp_target_ip,
+	const uint16_t udp_target_port
 ) :
 	m_seesaw(),
 	m_joy(m_seesaw),
-	m_udpSender(udpSender)
+	m_udpSender(udp_target_ip, udp_target_port)
 {
 	m_lastx = 0;
 	m_lasty = 0;
