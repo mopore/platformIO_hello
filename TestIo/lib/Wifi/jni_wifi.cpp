@@ -72,7 +72,7 @@ static void event_handler(void* arg, esp_event_base_t event_base,
     }
 }
 
-String connect_wifi(void) {
+std::string connect_wifi(void) {
     s_wifi_event_group = xEventGroupCreate();
 
     ESP_ERROR_CHECK(esp_netif_init());
@@ -139,7 +139,7 @@ String connect_wifi(void) {
     ESP_ERROR_CHECK(esp_event_handler_instance_unregister(WIFI_EVENT, ESP_EVENT_ANY_ID, instance_any_id));
     vEventGroupDelete(s_wifi_event_group);
 
-    String ip = connectedIpAddress.toString();
+    auto ip = std::string(connectedIpAddress.toString().c_str());
     return ip;
 }
 

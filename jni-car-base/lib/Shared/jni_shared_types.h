@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <string>
 
 #define NO_IP "0.0.0.0"
 
@@ -23,10 +24,10 @@ extern volatile PowerStatus powerStatus;
 
 typedef struct {
 	bool isWifiConnected;
-	char ip_v4[16];
+	std::string ip_v4;
 } WifiStatus;
 
-void setIP_v4Status(String newIp);
-String getIP_v4Status(void);
-
 extern volatile WifiStatus wifiStatus;
+
+void setWifiStatusIP_v4(const std::string &ipv4);
+std::string getWifiStatusIP_v4();

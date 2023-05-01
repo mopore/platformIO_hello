@@ -48,11 +48,11 @@ void readPowerTask(void* pvParameters) {
 void setup() {
 	Serial.begin(115200);
 	wifiStatus.isWifiConnected = false;
-	setIP_v4Status(NO_IP);
+	setWifiStatusIP_v4(NO_IP);
 
-	String ip = connect_wifi();
+	auto ip = connect_wifi();
 	if (ip != NO_IP) {
-		setIP_v4Status(ip);
+		setWifiStatusIP_v4(ip);
 		wifiStatus.isWifiConnected = true;
 	}
 

@@ -20,7 +20,7 @@
 #define NO_CONNECTION "<No Connection>"
 
 #define LABEL_TITLE "JNI CAR CONTROLLER"
-#define LABEL_IP "IP: "
+#define LABEL_IP "Target IP: "
 #define LABEL_BAT "BAT: "
 #define LABEL_X "X: "
 #define LABEL_Y "Y: "
@@ -132,8 +132,8 @@ void ControllerDisplay::loop() {
 	ipCanvas.fillScreen(0);
 	ipCanvas.setCursor(0,0);
 	if (wifiStatus.isWifiConnected) {
-		String ip = getIP_v4Status();
-		ipCanvas.print(ip);
+		auto ip_v4 = getWifiStatusIP_v4().c_str();
+		ipCanvas.print(ip_v4);
 	}
 	else {
 		ipCanvas.printf(NO_CONNECTION);

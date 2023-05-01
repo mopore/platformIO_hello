@@ -11,17 +11,15 @@ volatile PowerStatus powerStatus;
 volatile WifiStatus wifiStatus;
 
 
-void setIP_v4Status(String newIp) {
-	strncpy(
-		const_cast<char*>(wifiStatus.ip_v4), 
-		newIp.c_str(), 
-		sizeof(wifiStatus.ip_v4)
-	);
-	wifiStatus.ip_v4[sizeof(wifiStatus.ip_v4) - 1] = '\0'; // Ensure the string is null-terminated
+void setWifiStatusIP_v4(const std::string &ipv4) {
+	// Cast away volatile qualifier to allow assignment
+	WifiStatus *non_volatile_wifiStatus = const_cast<WifiStatus *>(&wifiStatus);
+	non_volatile_wifiStatus->ip_v4 = ipv4;
 }
 
 
-String getIP_v4Status() {
-	return const_cast<char*>(wifiStatus.ip_v4);
+std::string getWifiStatusIP_v4() {
+	// Cast away volatile qualifier to allow access
+	const WifiStatus *non_volatile_wifiStatus = const_cast<const WifiStatus *>(&wifiStatus);
+	return non_volatile_wifiStatus->ip_v4;
 }
-
