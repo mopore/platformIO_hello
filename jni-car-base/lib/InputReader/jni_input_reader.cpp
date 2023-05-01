@@ -1,6 +1,7 @@
 #include "jni_input_reader.h"
 
-InputController::InputController() {
+InputController::InputController(const uint16_t udp_target_port) 
+: m_udpReceiver(udp_target_port) {
 }
 
 

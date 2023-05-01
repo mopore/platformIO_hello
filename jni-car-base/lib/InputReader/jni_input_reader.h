@@ -6,7 +6,7 @@
 
 class InputController {
 	public:
-		InputController();
+		explicit InputController(const uint16_t udp_target_port);
 		void setup();
 		void loop();
 	private:

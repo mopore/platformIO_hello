@@ -5,11 +5,12 @@
 #include "jni_power_reader.h"
 #include "jni_wifi.h"
 #include "jni_udp_receiver.h"
+#include "jni_config.h"
 
 
 void readInputTask(void* pvParameters) {
 	const TickType_t xFrequency = pdMS_TO_TICKS(10); // .01 second	
-	InputController inputReader;
+	InputController inputReader(UDP_RECEIVER_SOCKET_PORT);
 
 	inputReader.setup();
 	while (true) {
@@ -20,7 +21,7 @@ void readInputTask(void* pvParameters) {
 
 
 void displayTask(void* pvParameters) {
-	const TickType_t xFrequency = pdMS_TO_TICKS(100);
+	const TickType_t xFrequency = pdMS_TO_TICKS(100); // .1 second
 	ControllerDisplay controllerDisplay;
 
 	controllerDisplay.setup();
@@ -47,7 +48,7 @@ void setup() {
 	wifiStatus.isWifiConnected = false;
 	setWifiStatusIP_v4(NO_IP);
 
-	auto ip = connect_wifi();
+	auto ip = connect_wifi(JNI_WIFI_SSID, JNI_WIFI_PASS);
 	if (ip != NO_IP) {
 		setWifiStatusIP_v4(ip);
 		wifiStatus.isWifiConnected = true;

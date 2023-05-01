@@ -4,15 +4,14 @@
 #include <AsyncUDP.h>
 #include "jni_shared_types.h"
 
-
-#define UDP_RECEIVER_SOCKET_PORT 8080
 #define UDP_RECEIVER_PACKAGE_SIZE 4	
 
 
 class JniUdpReceiver {
 	public:
-	 	JniUdpReceiver();
+	 	explicit JniUdpReceiver(const uint16_t udp_target_port);
 		void setup();
 	private:
 		AsyncUDP udp;
+		const uint16_t m_udp_target_port;
 };

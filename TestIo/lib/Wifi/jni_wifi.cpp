@@ -72,7 +72,7 @@ static void event_handler(void* arg, esp_event_base_t event_base,
     }
 }
 
-std::string connect_wifi(void) {
+std::string connect_wifi(const std::string& ssid, const std::string& password){
     s_wifi_event_group = xEventGroupCreate();
 
     ESP_ERROR_CHECK(esp_netif_init());
@@ -99,8 +99,8 @@ std::string connect_wifi(void) {
 	wifi_sta_config_t example_sta_config = {0};
 
     // Set example SSID and password
-    const char *jni_ssid = JNI_ESP_WIFI_SSID;
-    const char *jni_password = JNI_ESP_WIFI_PASS;
+    const char *jni_ssid = ssid.c_str();
+    const char *jni_password = password.c_str();
     memcpy(example_sta_config.ssid, jni_ssid, strlen(jni_ssid));
     memcpy(example_sta_config.password, jni_password, strlen(jni_password));
 
@@ -143,15 +143,15 @@ std::string connect_wifi(void) {
     return ip;
 }
 
-void app_main(void) {
-    //Initialize NVS
-    esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-      ESP_ERROR_CHECK(nvs_flash_erase());
-      ret = nvs_flash_init();
-    }
-    ESP_ERROR_CHECK(ret);
+// void app_main(void) {
+//     //Initialize NVS
+//     esp_err_t ret = nvs_flash_init();
+//     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+//       ESP_ERROR_CHECK(nvs_flash_erase());
+//       ret = nvs_flash_init();
+//     }
+//     ESP_ERROR_CHECK(ret);
 
-    ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
-    connect_wifi();
-}
+//     ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
+//     connect_wifi();
+// }

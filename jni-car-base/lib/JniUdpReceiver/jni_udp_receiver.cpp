@@ -1,12 +1,14 @@
 #include "jni_udp_receiver.h"
 
-
-JniUdpReceiver::JniUdpReceiver() {
+JniUdpReceiver::JniUdpReceiver(
+	const uint16_t udp_target_port
+):
+	m_udp_target_port(udp_target_port){
 }
 
 void JniUdpReceiver::setup() {
 	byte packetBuffer[UDP_RECEIVER_PACKAGE_SIZE];
-	if (udp.listen(UDP_RECEIVER_SOCKET_PORT)) {
+	if (udp.listen(m_udp_target_port)) {
 		Serial.println("Listening...");
 		// Aysnchronously receive UDP packets
 		udp.onPacket([this](AsyncUDPPacket packet) {
