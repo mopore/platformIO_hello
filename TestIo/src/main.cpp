@@ -1,61 +1,78 @@
 #include <Arduino.h>
-#include <Adafruit_NeoPixel.h>
+#include <string>
+#include <SPI.h>
+#include <PubSubClient.h>
+#include "WiFi.h"
+#include "jni_wifi.h"
 
-// Neopixel LED for Unexpected Maker FeatherS3
-#define PIN        40
-#define NUMPIXELS 1 // Popular NeoPixel ring size
-#define DELAYVAL 10 // Time (in milliseconds) to pause between pixels
+// Update these with values suitable for your hardware/network.
+IPAddress server(192, 168, 199, 119);
 
-
-static Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
-static const uint32_t YELLOW = pixels.Color(255, 255, 0);
-
-
-static uint32_t Wheel(byte WheelPos) {
-	WheelPos = 255 - WheelPos;
-	if (WheelPos < 85) {
-		return pixels.Color(255 - WheelPos * 3, 0, WheelPos * 3);
+void callback(char* topic, byte* payload, unsigned int length) {
+	Serial.print("Message arrived [");
+	Serial.print(topic);
+	Serial.print("] ");
+	
+	// Convert payload to string
+	std::string payload_str;
+	for (int i = 0; i < length; i++) {
+		payload_str += (char)payload[i];
 	}
-	if (WheelPos < 170) {
-		WheelPos -= 85;
-		return pixels.Color(0, WheelPos * 3, 255 - WheelPos * 3);
-	}
-	WheelPos -= 170;
-	return pixels.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
+
+	Serial.println(payload_str.c_str());
 }
 
+WiFiClient espClient;
+PubSubClient client(espClient);
 
-static void rainbow(){
-	uint16_t i, j;
+long lastReconnectAttempt = 0;
 
-	for(j=0; j<256; j++) {
-		for(i=0; i<pixels.numPixels(); i++) {
-			pixels.setPixelColor(i, Wheel((i+j) & 255));
-		}
-		pixels.show();
-		delay(DELAYVAL);
+boolean reconnect() {
+	if (client.connect("arduinoClient")) {
+		// Once connected, publish an announcement...
+		client.publish("outTopic","hello world");
+		// ... and subscribe to a topic...
+		client.subscribe("inTopic");
 	}
+	return client.connected();
 }
-
 
 void setup() {
-	pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
-	pixels.clear(); // Set all pixel colors to 'off'
-	pixels.setBrightness(50); // Set brightness to about 1/5 (max = 255)
+	Serial.begin(115200);
+	delay(10);
+	const std::string ssid = "Loxodonta";
+	const std::string password = "Twitch7%Carton%Driller%Bluish";
+	
+	auto returned_ip = connect_wifi(ssid, password).c_str();
+	if (returned_ip == NO_IP) {
+		Serial.println("Failed to connect to WiFi");
+		return;
+	}
+	else {
+		Serial.printf("Connected with IP address: %s\n", returned_ip);
+	}
+
+	client.setServer(server, 1883);
+	client.setCallback(callback);
+	delay(1500);
+	lastReconnectAttempt = 0;
 }
 
 
-void loop() {
-	rainbow();
-	pixels.clear();
-	pixels.show();
-	delay(1000);
+void loop()
+{
+	if (!client.connected()) {
+		long now = millis();
+		if (now - lastReconnectAttempt > 5000) {
+			lastReconnectAttempt = now;
+			// Attempt to reconnect
+			if (reconnect()) {
+				lastReconnectAttempt = 0;
+			}
+		}
+	} else {
+		// Client connected
+		client.loop();  // Non-blocking function for client
+	}
 
-	pixels.setPixelColor(0, YELLOW);
-	pixels.show();
-	delay(1000);
-
-	pixels.clear();
-	pixels.show();
-	delay(1000);
 }
