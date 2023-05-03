@@ -1,6 +1,9 @@
 #pragma once
-#include <map>
 #include <Arduino.h>
+#include <string>
+#include <map>
+#include <SPI.h>
+#include <Adafruit_seesaw.h>
 #include "jni_shared_types.h"
 #include "FeatherJoyWing.h"
 #include "jni_udp_sender.h"

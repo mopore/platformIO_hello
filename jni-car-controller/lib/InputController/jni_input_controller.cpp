@@ -1,12 +1,9 @@
 #include "jni_input_controller.h"
-#include <SPI.h>
-#include <Adafruit_seesaw.h>
 
 #define Y_MAX 127
 #define Y_MIN -128
 #define X_MAX 127
 #define X_MIN -126
-
 
 InputController* InputController::s_instance = nullptr;
 
@@ -42,20 +39,21 @@ void InputController::onJoystickEvent(int8_t xIn, int8_t yIn){
 
 
 void InputController::handleJoystickEvent(int8_t xIn, int8_t yIn){
+	// We only want to read the x-axis for steering input.
 	int xOut = 0;
-	int yOut = 0;
+	// int yOut = 0;
 	if (xIn > 0) {
 		xOut = ((float)xIn / X_MAX) * 100;
 	} else {
 		xOut = ((float)xIn / X_MIN) * -100;
 	}
-	if (yIn > 0) {
-		yOut = ((float)yIn / Y_MAX) * 100;
-	} else {
-		yOut = ((float)yIn / Y_MIN) * -100;
-	}
+	// if (yIn > 0) {
+	// 	yOut = ((float)yIn / Y_MAX) * 100;
+	// } else {
+	// 	yOut = ((float)yIn / Y_MIN) * -100;
+	// }
 	this->m_lastx = xOut;
-	this->m_lasty = yOut;
+	// this->m_lasty = yOut;
 	// Serial.print(xOut); Serial.print(" : "); Serial.println(yOut);
 }
 
@@ -70,11 +68,32 @@ void InputController::onButtonEvent(FJBUTTON* buttons, uint8_t count){
 void InputController::handleButtonEvent(FJBUTTON* buttons, uint8_t count){
 	for(int i = 0; i < count; i++) {
 		if (buttons[i].hasChanged) {
-			Serial.print("Button ");
-			String buttonName = buttonNames[buttons[i].pinId];
-			Serial.print(buttonName);
-			Serial.print(": ");
-			Serial.println(buttons[i].pressed);
+			// We only use the buttons for throttle and reverse.
+			// Serial.print("Button ");
+			// String buttonName = buttonNames[buttons[i].pinId];
+			// Serial.print(buttonName);
+			// Serial.print(": ");
+			// Serial.println(buttons[i].pressed);
+			if (BUTTON_RIGHT == buttons[i].pinId){
+				if (buttons[i].pressed) {
+					// Serial.println("100% throttle");
+					this->m_lasty = 100;
+				}
+				else {
+					// Serial.println("0% throttle");
+					this->m_lasty = 0;
+				}
+			}
+			else if (BUTTON_DOWN == buttons[i].pinId){
+				if (buttons[i].pressed) {
+					// Serial.println("100% reverse");
+					this->m_lasty = -100;
+				}
+				else {
+					// Serial.println("0% reverse");
+					this->m_lasty = 0;
+				}
+			}
 		}
 	}
 }
