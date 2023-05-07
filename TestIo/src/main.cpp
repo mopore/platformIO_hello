@@ -8,7 +8,7 @@
 #include "jni_mqtt_broker.h"
 
 
-JniMqttBroker mqtt_broker(JNI_MQTT_BROKER_IP, JNI_MQTT_BROKER_PORT);
+JniMqttBroker mqtt_broker = JniMqttBroker::getInstance(JNI_MQTT_BROKER_IP, JNI_MQTT_BROKER_PORT);
 
 void connectWifi() {
 	auto returned_ip = connect_wifi(JNI_WIFI_SSID, JNI_WIFI_PASS).c_str();
@@ -27,10 +27,12 @@ void setup() {
 	delay(10);
 	connectWifi();	
 
-	mqtt_broker.setup();
+	// mqtt_broker.setup();
 }
 
 
 void loop() {
-	mqtt_broker.loop();
+	delay(1000);
+	Serial.println("Looping...");
+	// mqtt_broker.loop();
 }
