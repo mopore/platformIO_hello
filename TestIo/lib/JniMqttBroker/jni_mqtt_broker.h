@@ -7,20 +7,19 @@
 
 class JniMqttBroker {
 	public:
-	 	static JniMqttBroker& getInstance(const std::string& brokerIp, const int brokerPort);
+	 	static JniMqttBroker& getInstance();
 		static void onMessage(char* topic, byte* payload, unsigned int length);
 
-		void setup();
+		void setup(const std::string& brokerIp, const int brokerPort);
 		void loop();
 
 	private:
-	 	explicit JniMqttBroker(const std::string& brokerIp, const int brokerPort);
+	 	explicit JniMqttBroker();
 	 	bool _reconnect();
 		void _handleMessage(char* topic, byte* payload, unsigned int length);
 
-		static JniMqttBroker* s_instance;
-		std::string _brokerIp;
-		int _brokerPort;
+		static JniMqttBroker s_instance;
+		WiFiClient _espClient;
 		PubSubClient _client;
 		long _lastReconnectAttempt = 0;
 

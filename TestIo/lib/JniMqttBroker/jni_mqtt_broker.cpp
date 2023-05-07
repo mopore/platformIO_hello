@@ -1,56 +1,53 @@
 #include <Arduino.h>
-#include <memory>
+#include <cstring>
 #include "jni_mqtt_broker.h"
 
-JniMqttBroker* JniMqttBroker::s_instance = nullptr;
+JniMqttBroker JniMqttBroker::s_instance;
 
-JniMqttBroker& JniMqttBroker::getInstance(const std::string& brokerIp, const int brokerPort) {
-	static JniMqttBroker instance(brokerIp, brokerPort);
-	return instance;
+
+JniMqttBroker& JniMqttBroker::getInstance() {
+	return JniMqttBroker::s_instance;
 }
+
 
 // Private constructor...
-JniMqttBroker::JniMqttBroker(const std::string& brokerIp, const int brokerPort) : 
-	_brokerIp(brokerIp),
-	_brokerPort(1883) {
-
-	WiFiClient espClient;
-	PubSubClient client(espClient);
-	this->_client = client;
-	s_instance = this;
+JniMqttBroker::JniMqttBroker() :
+	_espClient(),
+	_client(_espClient) {
 }
 
 
-void JniMqttBroker::setup() {
-	this->_client.setServer(this->_brokerIp.c_str(), this->_brokerPort);
-	this->_client.setCallback(JniMqttBroker::onMessage);
+void JniMqttBroker::setup(const std::string& brokerIp, const int brokerPort) {
+	char* brokerIpChar = new char[brokerIp.length() + 1];
+	strcpy(brokerIpChar, brokerIp.c_str());
+	_client.setServer(brokerIpChar, brokerPort);
+	_client.setCallback(JniMqttBroker::onMessage);
 	delay(1500);
-	this->_lastReconnectAttempt = 0;
+	_lastReconnectAttempt = 0;
 }
 
 
 void JniMqttBroker::loop() {
-	if (!this->_client.connected()) {
+	bool connected = _client.connected();
+	if (!connected) {
 		long now = millis();
-		if (now - this->_lastReconnectAttempt > 5000) {
-			this->_lastReconnectAttempt = now;
+		if (now - _lastReconnectAttempt > 5000) {
+			_lastReconnectAttempt = now;
 			// Attempt to reconnect
-			if (this->_reconnect()) {
-				this->_lastReconnectAttempt = 0;
+			if (_reconnect()) {
+				_lastReconnectAttempt = 0;
 			}
 		}
 	} else {
 		// Client connected
-		this->_client.loop();  // Non-blocking function for client
+		_client.loop();  // Non-blocking function for client
 	}
 }
 
 
 // Static method to pass messages to instance
 void JniMqttBroker::onMessage(char* topic, byte* payload, unsigned int length) {
-	if (s_instance != nullptr){
-		s_instance->_handleMessage(topic, payload, length);
-	}
+	s_instance._handleMessage(topic, payload, length);
 } 
 
 
@@ -70,11 +67,16 @@ void JniMqttBroker::_handleMessage(char* topic, byte* payload, unsigned int leng
 
 
 boolean JniMqttBroker::_reconnect() {
-	if (this->_client.connect("arduinoClient")) {
-		// Once connected, publish an announcement...
-		this->_client.publish("outTopic","hello world");
-		// ... and subscribe to a topic...
-		this->_client.subscribe("inTopic");
+	Serial.println("Attempting MQTT connection...");
+	if (_client.connect("arduinoClient")) {
+		Serial.println("Connected to MQTT broker");
+		_client.publish("outTopic","hello world");
+		_client.subscribe("inTopic");
 	}
-	return this->_client.connected();
+	else {
+		Serial.print("Failed, rc=");
+		Serial.print(_client.state());
+		Serial.println(" try again in 5 seconds");
+	}
+	return _client.connected();
 }
