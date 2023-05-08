@@ -18,8 +18,9 @@
 */
 
 
-std::string serializingExample() {
+const char* serializingExample() {
 	StaticJsonDocument<128> doc;
+	static char output[128];
 
 	doc["sensor"] = "gps";
 	doc["time"] = 1351824120;
@@ -29,15 +30,15 @@ std::string serializingExample() {
 	data.add(2.302038);
 	doc["truth"] = true;
 
-	std::string output;
 	serializeJson(doc, output);
-	Serial.printf("Serialized JSON: %s\n", output.c_str());
+	Serial.printf("Serialized JSON: %s\n", output);
 	Serial.println();
+
 	return output;
 }
 
 
-void deserializingExample(const std::string& input){
+void deserializingExample(const char* input){
 	StaticJsonDocument<192> doc;
 
 	DeserializationError error = deserializeJson(doc, input);
@@ -48,8 +49,8 @@ void deserializingExample(const std::string& input){
 		return;
 	}
 
-	std::string sensor = doc["sensor"]; // "gps"
-	Serial.printf("Sensor: %s\n", sensor.c_str());
+	const char* sensor = doc["sensor"]; // "gps"
+	Serial.printf("Sensor: %s\n", sensor);
 	long time = doc["time"]; // 1351824120
 	Serial.printf("Time: %ld\n", time);
 
@@ -71,7 +72,7 @@ void setup() {
 
 void loop() {
 	Serial.println("Looping...");
-	std::string serialized = serializingExample();
+	const char* serialized = serializingExample();
 	deserializingExample(serialized);
 	delay(10000);
 }
