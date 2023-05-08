@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
-#include <UMS3.h>
+#include <UMS3.h>   // unexpectedmaker/UMS3 Helper@^1.0.1
 #include "jni_shared_types.h"
 
 

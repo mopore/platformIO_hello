@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <Adafruit_NeoPixel.h>
+#include <Adafruit_NeoPixel.h>  // adafruit/Adafruit NeoPixel@^1.11.0
 
 // Neopixel LED for Unexpected Maker FeatherS3
 #define PIN        40

@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <string>
-#include <ArduinoJson.h>
+#include <ArduinoJson.h>  // bblanchon/ArduinoJson@^6.21.2
 
 
 // For creating some code you can use this assistant: 

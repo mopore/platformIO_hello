@@ -2,7 +2,7 @@
 #include <string>
 #include <Arduino.h>
 #include <WiFi.h>
-#include <PubSubClient.h>
+#include <PubSubClient.h>  // knolleary/PubSubClient@^2.8
 
 
 class JniMqttBroker {
