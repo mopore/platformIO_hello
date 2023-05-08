@@ -18,23 +18,20 @@
 */
 
 
-const char* serializingExample() {
-	StaticJsonDocument<128> doc;
-	static char output[128];
+void serializingExample(char* output, size_t output_size) {
+    StaticJsonDocument<128> doc;  // To be created on the stack
 
-	doc["sensor"] = "gps";
-	doc["time"] = 1351824120;
+    doc["sensor"] = "gps";
+    doc["time"] = 1351824120;
 
-	JsonArray data = doc.createNestedArray("data");
-	data.add(48.75608);
-	data.add(2.302038);
-	doc["truth"] = true;
+    JsonArray data = doc.createNestedArray("data");
+    data.add(48.75608);
+    data.add(2.302038);
+    doc["truth"] = true;
 
-	serializeJson(doc, output);
-	Serial.printf("Serialized JSON: %s\n", output);
-	Serial.println();
-
-	return output;
+    serializeJson(doc, output, output_size);
+    printf("Serialized JSON: %s\n", output);
+    printf("\n");
 }
 
 
@@ -72,7 +69,8 @@ void setup() {
 
 void loop() {
 	Serial.println("Looping...");
-	const char* serialized = serializingExample();
+	char serialized[128];
+	serializingExample(serialized, sizeof(serialized));
 	deserializingExample(serialized);
 	delay(10000);
 }
