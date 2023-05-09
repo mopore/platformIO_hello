@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include <Arduino.h>
 #include <WiFi.h>
 #include <PubSubClient.h>  // knolleary/PubSubClient@^2.8
@@ -10,7 +9,7 @@ class JniMqttBroker {
 	 	static JniMqttBroker& getInstance();
 		static void onMessage(char* topic, byte* payload, unsigned int length);
 
-		void setup(const std::string& brokerIp, const int brokerPort);
+		void setup(const char* brokerIp, const int brokerPort);
 		void loop();
 
 	private:

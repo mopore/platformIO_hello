@@ -39,13 +39,17 @@ void setup() {
 	Serial.begin(115200);
 	delay(10);
 	
-	auto returned_ip = connect_wifi(JNI_WIFI_SSID, JNI_WIFI_PASS).c_str();
-	if (returned_ip == NO_IP) {
-		Serial.println("Failed to connect to WiFi");
-		return;
+	const char* ssid = "Loxodonta";
+	const char* password = "Twitch7%Carton%Driller%Bluish";
+	
+	char out_ip[16];
+	connect_wifi(out_ip, ssid, password);
+
+	if (strcmp(out_ip, NO_IP)) {
+		Serial.printf("Connected with IP address: %s\n", out_ip);
 	}
 	else {
-		Serial.printf("Connected with IP address: %s\n", returned_ip);
+		Serial.println("Failed to connect to WiFi");
 	}
 
 	client.setServer(JNI_MQTT_BROKER_IP, JNI_MQTT_BROKER_PORT);

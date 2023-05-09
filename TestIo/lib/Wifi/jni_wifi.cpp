@@ -22,25 +22,18 @@
 #include "lwip/sys.h"
 #include "jni_wifi.h"
 
-static IPAddress connectedIpAddress;
-
-
-
-/* The examples use WiFi configuration that you can set via project configuration menu
-
-   If you'd rather not, just change the below entries to strings with
-   the config you want - ie #define EXAMPLE_WIFI_SSID "mywifissid"
-*/
-#define EXAMPLE_ESP_MAXIMUM_RETRY  5
-
-/* FreeRTOS event group to signal when we are connected*/
-static EventGroupHandle_t s_wifi_event_group;
-
 /* The event group allows multiple bits for each event, but we only care about two events:
  * - we are connected to the AP with an IP
  * - we failed to connect after the maximum amount of retries */
 #define WIFI_CONNECTED_BIT BIT0
 #define WIFI_FAIL_BIT      BIT1
+
+#define EXAMPLE_ESP_MAXIMUM_RETRY  5
+
+/* FreeRTOS event group to signal when we are connected*/
+static EventGroupHandle_t s_wifi_event_group;
+
+static IPAddress connectedIpAddress;
 
 static const char *TAG = "wifi station";
 
@@ -61,10 +54,6 @@ static void event_handler(void* arg, esp_event_base_t event_base,
         ESP_LOGI(TAG,"connect to the AP fail");
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
-        // Print the IP address to the Serial monitor
-        // delay(5000);
-        // Serial.print("Got IP: ");
-        // Serial.println(ip4addr_ntoa((const ip4_addr_t *)&event->ip_info.ip));
         connectedIpAddress = IPAddress(event->ip_info.ip.addr);
 
         s_retry_num = 0;
@@ -72,7 +61,7 @@ static void event_handler(void* arg, esp_event_base_t event_base,
     }
 }
 
-std::string connect_wifi(const std::string& ssid, const std::string& password){
+void connect_wifi(char out_connectIp[MAX_IP_LENGTH], const char* jni_ssid, const char* jni_password){
     s_wifi_event_group = xEventGroupCreate();
 
     ESP_ERROR_CHECK(esp_netif_init());
@@ -99,8 +88,6 @@ std::string connect_wifi(const std::string& ssid, const std::string& password){
 	wifi_sta_config_t example_sta_config = {0};
 
     // Set example SSID and password
-    const char *jni_ssid = ssid.c_str();
-    const char *jni_password = password.c_str();
     memcpy(example_sta_config.ssid, jni_ssid, strlen(jni_ssid));
     memcpy(example_sta_config.password, jni_password, strlen(jni_password));
 
@@ -139,19 +126,5 @@ std::string connect_wifi(const std::string& ssid, const std::string& password){
     ESP_ERROR_CHECK(esp_event_handler_instance_unregister(WIFI_EVENT, ESP_EVENT_ANY_ID, instance_any_id));
     vEventGroupDelete(s_wifi_event_group);
 
-    auto ip = std::string(connectedIpAddress.toString().c_str());
-    return ip;
+    connectedIpAddress.toString().toCharArray(out_connectIp, MAX_IP_LENGTH);
 }
-
-// void app_main(void) {
-//     //Initialize NVS
-//     esp_err_t ret = nvs_flash_init();
-//     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-//       ESP_ERROR_CHECK(nvs_flash_erase());
-//       ret = nvs_flash_init();
-//     }
-//     ESP_ERROR_CHECK(ret);
-
-//     ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
-//     connect_wifi();
-// }

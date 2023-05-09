@@ -5,16 +5,17 @@
 
 void setup() {
 	Serial.begin(115200);
-	const std::string ssid = "Loxodonta";
-	const std::string password = "Twitch7%Carton%Driller%Bluish";
+	const char* ssid = "Loxodonta";
+	const char* password = "Twitch7%Carton%Driller%Bluish";
 	
-	auto returned_ip = connect_wifi(ssid, password).c_str();
-	if (returned_ip == NO_IP) {
-		Serial.println("Failed to connect to WiFi");
-		return;
+	char out_ip[16];
+	connect_wifi(out_ip, ssid, password);
+
+	if (strcmp(out_ip, NO_IP)) {
+		Serial.printf("Connected with IP address: %s\n", out_ip);
 	}
 	else {
-		Serial.printf("Connected with IP address: %s\n", returned_ip);
+		Serial.println("Failed to connect to WiFi");
 	}
 }
 

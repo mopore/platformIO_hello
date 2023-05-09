@@ -1,76 +1,35 @@
 #include <Arduino.h>
 #include <string>
-#include <ArduinoJson.h>  // bblanchon/ArduinoJson@^6.21.2
+#include <SPI.h>
+#include "WiFi.h"
+#include "jni_wifi.h"
+#include "jni_config.h"
+#include "jni_mqtt_broker.h"
 
-
-// For creating some code you can use this assistant: 
-// https://arduinojson.org/v6/assistant/
-/*
-	{
-		"sensor": "gps",
-		"time": 1351824120,
-		"data": [
-			48.75608,
-			2.302038
-		],
-		"truth": true
-	}
-*/
-
-
-void serializingExample(char* output, size_t output_size) {
-    StaticJsonDocument<128> doc;  // To be created on the stack
-
-    doc["sensor"] = "gps";
-    doc["time"] = 1351824120;
-
-    JsonArray data = doc.createNestedArray("data");
-    data.add(48.75608);
-    data.add(2.302038);
-    doc["truth"] = true;
-
-    serializeJson(doc, output, output_size);
-    printf("Serialized JSON: %s\n", output);
-    printf("\n");
-}
-
-
-void deserializingExample(const char* input){
-	StaticJsonDocument<192> doc;
-
-	DeserializationError error = deserializeJson(doc, input);
-
-	if (error) {
-		Serial.print("deserializeJson() failed: ");
-		Serial.println(error.c_str());
-		return;
-	}
-
-	const char* sensor = doc["sensor"]; // "gps"
-	Serial.printf("Sensor: %s\n", sensor);
-	long time = doc["time"]; // 1351824120
-	Serial.printf("Time: %ld\n", time);
-
-	float data_0 = doc["data"][0]; // 48.75608
-	float data_1 = doc["data"][1]; // 2.302038
-	Serial.printf("Data: %f, %f\n", data_0, data_1);
-
-	bool truth = doc["truth"]; // true
-	Serial.printf("Truth: %s\n", truth ? "true" : "false");
-	Serial.println();
-}
-
+JniMqttBroker broker = JniMqttBroker::getInstance();
 
 void setup() {
 	Serial.begin(115200);
 	delay(10);
+	
+	const char* ssid = "Loxodonta";
+	const char* password = "Twitch7%Carton%Driller%Bluish";
+	
+	char out_ip[16];
+	connect_wifi(out_ip, ssid, password);
+
+	if (strcmp(out_ip, NO_IP)) {
+		Serial.printf("Connected with IP address: %s\n", out_ip);
+	}
+	else {
+		Serial.println("Failed to connect to WiFi");
+	}
+
+	broker.setup(JNI_MQTT_BROKER_IP, JNI_MQTT_BROKER_PORT);
 }
 
 
 void loop() {
-	Serial.println("Looping...");
-	char serialized[128];
-	serializingExample(serialized, sizeof(serialized));
-	deserializingExample(serialized);
-	delay(10000);
+	broker.loop();
+	delay(100); // Goging with 10 Hz
 }

@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <cstring>
 #include "jni_mqtt_broker.h"
 
 JniMqttBroker JniMqttBroker::s_instance;
@@ -17,10 +16,8 @@ JniMqttBroker::JniMqttBroker() :
 }
 
 
-void JniMqttBroker::setup(const std::string& brokerIp, const int brokerPort) {
-	char* brokerIpChar = new char[brokerIp.length() + 1];
-	strcpy(brokerIpChar, brokerIp.c_str());
-	_client.setServer(brokerIpChar, brokerPort);
+void JniMqttBroker::setup(const char* brokerIp, const int brokerPort) {
+	_client.setServer(brokerIp, brokerPort);
 	_client.setCallback(JniMqttBroker::onMessage);
 	delay(1500);
 	_lastReconnectAttempt = 0;

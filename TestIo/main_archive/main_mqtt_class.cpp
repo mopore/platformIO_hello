@@ -12,7 +12,8 @@ void setup() {
 	Serial.begin(115200);
 	delay(10);
 	
-	auto returned_ip = connect_wifi(JNI_WIFI_SSID, JNI_WIFI_PASS).c_str();
+	char out_ip[16];
+	connect_wifi(out_ip, ssid, password);
 	if (returned_ip == NO_IP) {
 		Serial.println("Failed to connect to WiFi");
 		return;
