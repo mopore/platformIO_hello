@@ -11,7 +11,7 @@ void setup() {
 	char out_ip[16];
 	connect_wifi(out_ip, ssid, password);
 
-	if (strcmp(out_ip, NO_IP)) {
+	if (strcmp(out_ip, NO_IP) != 0) {
 		Serial.printf("Connected with IP address: %s\n", out_ip);
 	}
 	else {
