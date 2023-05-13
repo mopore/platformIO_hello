@@ -48,16 +48,18 @@ void setup() {
 	wifiStatus.isWifiConnected = false;
 	setWifiStatusIP_v4(NO_IP);
 
-	auto ip = connect_wifi(JNI_WIFI_SSID, JNI_WIFI_PASS);
-	if (ip != NO_IP) {
-		setWifiStatusIP_v4(ip);
-		wifiStatus.isWifiConnected = true;
+	char out_ip[MAX_IP_LENGTH];
+	connect_wifi(out_ip, JNI_WIFI_SSID, JNI_WIFI_PASS);
 
-	}
+	if (strcmp(out_ip, NO_IP) != 0) {
+		Serial.printf("Connected with IP address: %s\n", out_ip);
+		setWifiStatusIP_v4(out_ip);
+		wifiStatus.isWifiConnected = true;
 	
-	xTaskCreate(displayTask, "displayTask", 4096, NULL, 1, NULL);
-	xTaskCreate(readInputTask, "readInputTask", 4096, NULL, 1, NULL);	
-	xTaskCreate(readPowerTask, "readPowerTask", 4096, NULL, 1, NULL);
+		xTaskCreate(displayTask, "displayTask", 4096, NULL, 1, NULL);
+		xTaskCreate(readInputTask, "readInputTask", 4096, NULL, 1, NULL);	
+		xTaskCreate(readPowerTask, "readPowerTask", 4096, NULL, 1, NULL);
+	}
 }
 
 

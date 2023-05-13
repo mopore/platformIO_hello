@@ -132,7 +132,7 @@ void ControllerDisplay::loop() {
 	ipCanvas.fillScreen(0);
 	ipCanvas.setCursor(0,0);
 	if (wifiStatus.isWifiConnected) {
-		auto ip = getWifiStatusIP_v4().c_str();
+		auto ip = getWifiStatusIP_v4();
 		ipCanvas.print(ip);
 	}
 	else {

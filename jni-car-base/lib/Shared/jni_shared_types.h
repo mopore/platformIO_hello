@@ -3,6 +3,8 @@
 #include <Arduino.h>
 #include <string>
 
+#define MAX_IP_LENGTH 16
+
 
 typedef struct {
 	int16_t x;
@@ -22,10 +24,10 @@ extern volatile PowerStatus powerStatus;
 
 typedef struct {
 	bool isWifiConnected;
-	std::string ip_v4;
+	char ip_v4[MAX_IP_LENGTH];
 } WifiStatus;
 
 extern volatile WifiStatus wifiStatus;
 
-void setWifiStatusIP_v4(const std::string &ipv4);
-const std::string getWifiStatusIP_v4();
+void setWifiStatusIP_v4(const char* ipv4);
+const char* getWifiStatusIP_v4();
