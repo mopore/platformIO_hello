@@ -1,33 +1,18 @@
 #include <Arduino.h>
+#include <Ps3Controller.h>
 
-#define JNI_TEST_EXCEPTION "JNI_TEST_EXCEPTION"
+void setup()
+{
+    Serial.begin(115200);
+    Ps3.begin();
 
-double createException(){
-	throw std::runtime_error(JNI_TEST_EXCEPTION);
-	return 1;
+    String address = Ps3.getAddress();
+
+    Serial.print("The ESP32's Bluetooth MAC address is: ");
+    Serial.println(address);
 }
 
-void setup() {
-	Serial.begin(115200);
-	delay(10);
-}
-
-
-void loop() {
-	delay(1000);
-	try {
-		createException();
-		Serial.println("No exception");
-	}
-	catch(const std::exception& e) {
-		Serial.println("Caught exception");
-		if (strcmp(e.what(), JNI_TEST_EXCEPTION) == 0) {
-			Serial.println("Exception is JNI_TEST_EXCEPTION");
-		}
-		else {
-			Serial.println("Exception is not JNI_TEST_EXCEPTION");
-		}
-	}
-	
+void loop()
+{
 
 }
