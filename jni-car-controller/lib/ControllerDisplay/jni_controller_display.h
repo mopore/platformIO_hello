@@ -14,7 +14,7 @@ class ControllerDisplay {
 	public:
 		explicit ControllerDisplay(const std::string& target_ipv4);
 		void setup();
-		void loop();
+		void loop10Hz();
 	private:
 		const std::string m_target_ipv4;
 };

@@ -9,14 +9,14 @@
 #include "jni_udp_sender.h"
 
 
-class InputReader {
+class InputController {
 	public:
-		explicit InputReader(
+		explicit InputController(
 			const char* udp_target_ip,
 			const uint16_t udp_target_port
 		);
 		void setup();
-		void loop();
+		void loop100Hz();
 
 		// Used to pass callback events.
 		static void onJoystickEvent(int8_t xIn, int8_t yIn);
@@ -30,7 +30,7 @@ class InputReader {
 		JniUdpSender m_udpSender;
 		
 		static std::map<uint8_t, String> buttonNames;
-		static InputReader* s_instance;  // Used to pass callback events.
+		static InputController* s_instance;  // Used to pass callback events.
 
 		void handleJoystickEvent(int8_t xIn, int8_t yIn);
 		void handleButtonEvent(FJBUTTON* buttons, uint8_t count);

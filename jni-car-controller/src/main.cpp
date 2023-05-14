@@ -13,10 +13,10 @@
 
 void readInputTask(void* pvParameters) {
 	const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_100_HZ);
-	InputReader inputController(UDP_RECEIVER_SOCKET_IP, UDP_RECEIVER_SOCKET_PORT);
+	InputController inputController(UDP_RECEIVER_SOCKET_IP, UDP_RECEIVER_SOCKET_PORT);
 	inputController.setup();
 	while (true) {
-		inputController.loop();
+		inputController.loop100Hz();
 		vTaskDelay(xFrequency);
 	}
 }
@@ -28,7 +28,7 @@ void displayTask(void* pvParameters) {
 	controllerDisplay.setup();
 	
 	while(true) {
-		controllerDisplay.loop();
+		controllerDisplay.loop10Hz();
 		vTaskDelay(xFrequency);
 	}
 }

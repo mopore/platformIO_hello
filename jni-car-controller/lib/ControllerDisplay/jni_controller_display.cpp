@@ -97,7 +97,7 @@ void ControllerDisplay::setup() {
 }
 
 
-void ControllerDisplay::loop() {
+void ControllerDisplay::loop10Hz() {
 
 	// Draw the X coordinate
 	xCanvas.fillScreen(0);
