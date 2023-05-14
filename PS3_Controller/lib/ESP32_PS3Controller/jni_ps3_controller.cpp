@@ -1,6 +1,7 @@
+#include "jni_shared_types.h"
 #include "jni_ps3_controller.h"
 
-static int toPerCent(int8_t value) {
+static int16_t toPerCent(int8_t value) {
 	return (int) (value * 100 / 127);
 }
 
@@ -47,13 +48,15 @@ void JniPs3Controller::_handleNotify() {
 	if( abs(Ps3.event.analog_changed.stick.lx) > 1 ){
 		auto x_raw = Ps3.data.analog.stick.lx;
 		auto x = toPerCent(x_raw);
-		Serial.print(" x="); Serial.print(x);
-		Serial.println();
+		carInput.x = x;
+		// Serial.print(" x="); Serial.print(x);
+		// Serial.println();
 	}
 	if( abs(Ps3.event.analog_changed.stick.ry) > 1 ){
 		auto y_raw = Ps3.data.analog.stick.ry;
 		auto y = toPerCent(y_raw) * -1;
-		Serial.print(" y="); Serial.print(y);
-		Serial.println();
+		carInput.y = y;
+		// Serial.print(" y="); Serial.print(y);
+		// Serial.println();
 	}
 }
