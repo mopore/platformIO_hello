@@ -12,7 +12,7 @@
 class InputController {
 	public:
 		explicit InputController(
-			const std::string& udp_target_ip,
+			const char* udp_target_ip,
 			const uint16_t udp_target_port
 		);
 		void setup();

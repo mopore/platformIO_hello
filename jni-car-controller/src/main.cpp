@@ -47,18 +47,21 @@ void readPowerTask(void* pvParameters) {
 
 void setup() {
 	Serial.begin(115200);
-	wifiStatus.isWifiConnected = false;
+	connectionStatus.isWifiConnected = false;
+	connectionStatus.isUdpWorking = false;
 	setWifiStatusIP_v4(NO_IP);
 
-	auto connected_ip = connect_wifi(JNI_WIFI_SSID, JNI_WIFI_PASS);
-	if (connected_ip != NO_IP) {
-		setWifiStatusIP_v4(connected_ip);
-		wifiStatus.isWifiConnected = true;
+	char out_ip[MAX_IP_LENGTH];
+	connect_wifi(out_ip, TALPA_SSID, TALPA_PASS);
+	if (strcmp(out_ip, NO_IP) != 0) {
+		Serial.printf("Connected with IP address: %s\n", out_ip);
+		setWifiStatusIP_v4(out_ip);
+		connectionStatus.isWifiConnected = true;
+		xTaskCreate(displayTask, "displayTask", 4096, NULL, 1, NULL);
+		xTaskCreate(readInputTask, "readInputTask", 4096, NULL, 1, NULL);	
+		xTaskCreate(readPowerTask, "readPowerTask", 4096, NULL, 1, NULL);
 	}
 
-	xTaskCreate(displayTask, "displayTask", 4096, NULL, 1, NULL);
-	xTaskCreate(readInputTask, "readInputTask", 4096, NULL, 1, NULL);	
-	xTaskCreate(readPowerTask, "readPowerTask", 4096, NULL, 1, NULL);
 }
 
 void loop() {

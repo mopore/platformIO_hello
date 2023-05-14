@@ -12,7 +12,7 @@ std::map<uint8_t, String> InputController::buttonNames;
 
 
 InputController::InputController(
-	const std::string& udp_target_ip,
+	const char* udp_target_ip,
 	const uint16_t udp_target_port
 ) :
 	m_seesaw(),
@@ -111,5 +111,12 @@ void InputController::loop() {
 	carInput.x = m_lastx;
 	carInput.y = m_lasty;
 	m_joy.update();
-	m_udpSender.send(m_lastx, m_lasty);
+	try {
+		bool sentResult = m_udpSender.send(m_lastx, m_lasty);
+		connectionStatus.isUdpWorking = sentResult;
+	}
+	catch (const std::exception& e) {
+		Serial.print("Exception: ");
+		Serial.println(e.what());
+	}
 }

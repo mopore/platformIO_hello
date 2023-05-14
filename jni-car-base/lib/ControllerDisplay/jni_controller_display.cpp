@@ -32,7 +32,7 @@
 static Adafruit_SH1107 display = Adafruit_SH1107(64, 128, &Wire);
 static GFXcanvas1 xCanvas = GFXcanvas1(COORDINATE_WIDTH, 10);
 static GFXcanvas1 yCanvas = GFXcanvas1(COORDINATE_WIDTH, 10);
-static GFXcanvas1 batCanvas = GFXcanvas1(BAT_WIDTH, 10);
+static GFXcanvas1 batCanvas = GFXcanvas1(TEXT_WIDTH, 10);
 static GFXcanvas1 ipCanvas = GFXcanvas1(128, 10);
 
 ControllerDisplay::ControllerDisplay() {
@@ -124,14 +124,14 @@ void ControllerDisplay::loop() {
 	display.drawBitmap(
 		BAT_COL, VALUES_Y, 
 		batCanvas.getBuffer(), 
-		BAT_WIDTH, 10, 
+		TEXT_WIDTH, 10, 
 		SH110X_WHITE, SH110X_BLACK
 	);
 
 	// Draw the IP address
 	ipCanvas.fillScreen(0);
 	ipCanvas.setCursor(0,0);
-	if (wifiStatus.isWifiConnected) {
+	if (connectionStatus.isWifiConnected) {
 		auto ip = getWifiStatusIP_v4();
 		ipCanvas.print(ip);
 	}

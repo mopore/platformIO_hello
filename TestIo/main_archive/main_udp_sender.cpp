@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <SPI.h>
-#include <Adafruit_I2CDevice.h>
+// #include <Adafruit_I2CDevice.h>
 #include "jni_wifi.h"
 #include "jni_udp_sender.h"
 

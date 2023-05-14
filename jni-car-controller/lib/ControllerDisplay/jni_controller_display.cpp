@@ -11,11 +11,15 @@
 #define COORDINATE_WIDTH 30
 
 #define BAT_COL 70
-#define BAT_WIDTH 30
+#define TEXT_WIDTH 30
 
 #define IP_COL 0
 #define LABEL_IP_Y 47
 #define VALUE_IP_Y LABEL_IP_Y + 10
+
+#define UDP_COL 102
+#define LABEL_UDP_Y 47
+#define VALUE_UDP_Y LABEL_UDP_Y + 10
 
 #define NO_CONNECTION "<No Connection>"
 
@@ -24,15 +28,20 @@
 #define LABEL_BAT "BAT: "
 #define LABEL_X "X: "
 #define LABEL_Y "Y: "
+#define LABEL_UDP "UDP: "
+
 #define TEXT_USB "USB"
 #define TEXT_LOW "LOW"
 #define TEXT_MED "MED"
 #define TEXT_HIGH "HIGH"
+#define TEXT_OK "OK"
+#define TEXT_NO "n/a"
 
 static Adafruit_SH1107 display = Adafruit_SH1107(64, 128, &Wire);
 static GFXcanvas1 xCanvas = GFXcanvas1(COORDINATE_WIDTH, 10);
 static GFXcanvas1 yCanvas = GFXcanvas1(COORDINATE_WIDTH, 10);
-static GFXcanvas1 batCanvas = GFXcanvas1(BAT_WIDTH, 10);
+static GFXcanvas1 batCanvas = GFXcanvas1(TEXT_WIDTH, 10);
+static GFXcanvas1 udpCanvas = GFXcanvas1(TEXT_WIDTH, 10);
 
 ControllerDisplay::ControllerDisplay(const std::string& target_ipv4)
     : m_target_ipv4(target_ipv4) {
@@ -80,6 +89,10 @@ void ControllerDisplay::setup() {
 	display.setCursor(IP_COL, VALUE_IP_Y);
 	display.print(m_target_ipv4.c_str());
 
+	// Draw connection label
+	display.setCursor(UDP_COL, LABEL_UDP_Y);
+	display.print(LABEL_UDP);
+
 	display.display();
 }
 
@@ -126,7 +139,23 @@ void ControllerDisplay::loop() {
 	display.drawBitmap(
 		BAT_COL, VALUES_Y, 
 		batCanvas.getBuffer(), 
-		BAT_WIDTH, 10, 
+		TEXT_WIDTH, 10, 
+		SH110X_WHITE, SH110X_BLACK
+	);
+
+	// Draw the UDP status
+	udpCanvas.fillScreen(0);
+	udpCanvas.setCursor(0,0);
+	if (connectionStatus.isUdpWorking) {
+		udpCanvas.printf(TEXT_OK);
+	}
+	else {
+		udpCanvas.printf(TEXT_NO);
+	}
+	display.drawBitmap(
+		UDP_COL, VALUE_UDP_Y, 
+		udpCanvas.getBuffer(), 
+		TEXT_WIDTH, 10, 
 		SH110X_WHITE, SH110X_BLACK
 	);
 
