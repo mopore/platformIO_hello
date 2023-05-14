@@ -24,6 +24,7 @@ extern volatile PowerStatus powerStatus;
 
 typedef struct {
 	bool isWifiConnected;
+	bool isUdpWorking;
 	char ip_v4[MAX_IP_LENGTH];
 } ConnectionSatus;
 

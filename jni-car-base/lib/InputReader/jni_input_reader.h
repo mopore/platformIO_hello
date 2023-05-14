@@ -4,11 +4,12 @@
 #include "jni_udp_receiver.h"
 
 
-class InputController {
+class InputReader {
 	public:
-		explicit InputController(const uint16_t udp_target_port);
+		explicit InputReader(const uint16_t udp_target_port);
 		void setup();
-		void loop();
+		void loop100Hz();
 	private:
 		JniUdpReceiver m_udpReceiver;
+		int8_t m_loopCounter = 0;
 };

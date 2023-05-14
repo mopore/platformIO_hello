@@ -7,33 +7,37 @@
 #include "jni_udp_receiver.h"
 #include "jni_config.h"
 
+#define FREQ_100HZ 10  // Every 10ms of 1000ms
+#define FREQ_10HZ 100  // Every 100ms of 1000ms
+#define FREQ_5Sec 5000
+
 
 void readInputTask(void* pvParameters) {
-	const TickType_t xFrequency = pdMS_TO_TICKS(10); // .01 second	
-	InputController inputReader(UDP_RECEIVER_SOCKET_PORT);
+	const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_100HZ);
+	InputReader inputReader(UDP_RECEIVER_SOCKET_PORT);
 
 	inputReader.setup();
 	while (true) {
-		inputReader.loop();
+		inputReader.loop100Hz();
 		vTaskDelay(xFrequency);
 	}
 }
 
 
 void displayTask(void* pvParameters) {
-	const TickType_t xFrequency = pdMS_TO_TICKS(100); // .1 second
+	const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_10HZ);
 	ControllerDisplay controllerDisplay;
 
 	controllerDisplay.setup();
 	while(true) {
-		controllerDisplay.loop();
+		controllerDisplay.loop10Hz();
 		vTaskDelay(xFrequency);
 	}
 }
 
 
 void readPowerTask(void* pvParameters) {
-	const TickType_t xFrequency = pdMS_TO_TICKS(5000); // 5 seconds
+	const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_5Sec);
 	PowerReader powerReader;
 	powerReader.setup();
 	while (true) {
@@ -46,6 +50,7 @@ void readPowerTask(void* pvParameters) {
 void setup() {
 	Serial.begin(115200);
 	connectionStatus.isWifiConnected = false;
+	connectionStatus.isUdpWorking = false;
 	setWifiStatusIP_v4(NO_IP);
 
 	char out_ip[MAX_IP_LENGTH];

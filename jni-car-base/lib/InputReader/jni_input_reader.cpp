@@ -1,15 +1,19 @@
 #include "jni_input_reader.h"
 
-InputController::InputController(const uint16_t udp_target_port) 
+InputReader::InputReader(const uint16_t udp_target_port) 
 : m_udpReceiver(udp_target_port) {
 }
 
 
-void InputController::setup() {
+void InputReader::setup() {
 	m_udpReceiver.setup();
 }
 
 
-void InputController::loop() {
-	// Nothing to do here
+void InputReader::loop100Hz() {
+	m_loopCounter++;
+	if (m_loopCounter == 100){
+		m_udpReceiver.loop1Hz();
+		m_loopCounter = 0;
+	}	
 }

@@ -13,5 +13,5 @@ class ControllerDisplay {
 	public:
 		ControllerDisplay();
 		void setup();
-		void loop();
+		void loop10Hz();
 };

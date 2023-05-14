@@ -5,13 +5,13 @@
 #define X_MAX 127
 #define X_MIN -126
 
-InputController* InputController::s_instance = nullptr;
+InputReader* InputReader::s_instance = nullptr;
 
 // Initialize the static map for button names
-std::map<uint8_t, String> InputController::buttonNames;
+std::map<uint8_t, String> InputReader::buttonNames;
 
 
-InputController::InputController(
+InputReader::InputReader(
 	const char* udp_target_ip,
 	const uint16_t udp_target_port
 ) :
@@ -31,14 +31,14 @@ InputController::InputController(
 }
 
 
-void InputController::onJoystickEvent(int8_t xIn, int8_t yIn){
+void InputReader::onJoystickEvent(int8_t xIn, int8_t yIn){
 	if (s_instance != nullptr) {
 		s_instance->handleJoystickEvent(xIn, yIn);
 	}
 }
 
 
-void InputController::handleJoystickEvent(int8_t xIn, int8_t yIn){
+void InputReader::handleJoystickEvent(int8_t xIn, int8_t yIn){
 	// We only want to read the x-axis for steering input.
 	int xOut = 0;
 	// int yOut = 0;
@@ -58,14 +58,14 @@ void InputController::handleJoystickEvent(int8_t xIn, int8_t yIn){
 }
 
 
-void InputController::onButtonEvent(FJBUTTON* buttons, uint8_t count){
+void InputReader::onButtonEvent(FJBUTTON* buttons, uint8_t count){
 	if (s_instance != nullptr) {
 		s_instance->handleButtonEvent(buttons, count);
 	}
 }
 
 
-void InputController::handleButtonEvent(FJBUTTON* buttons, uint8_t count){
+void InputReader::handleButtonEvent(FJBUTTON* buttons, uint8_t count){
 	for(int i = 0; i < count; i++) {
 		if (buttons[i].hasChanged) {
 			// We only use the buttons for throttle and reverse.
@@ -99,15 +99,15 @@ void InputController::handleButtonEvent(FJBUTTON* buttons, uint8_t count){
 }
 
 
-void InputController::setup() {
+void InputReader::setup() {
 	m_joy.begin();	
-	m_joy.registerJoystickCallback(&InputController::onJoystickEvent);
-	m_joy.registerButtonCallback(&InputController::onButtonEvent);
+	m_joy.registerJoystickCallback(&InputReader::onJoystickEvent);
+	m_joy.registerButtonCallback(&InputReader::onButtonEvent);
 	m_udpSender.setup();
 }
 
 
-void InputController::loop() {
+void InputReader::loop() {
 	carInput.x = m_lastx;
 	carInput.y = m_lasty;
 	m_joy.update();

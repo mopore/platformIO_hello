@@ -17,7 +17,14 @@ void JniUdpReceiver::setup() {
 				int16_t y = packet.data()[2] | packet.data()[3] << 8;
 				carInput.x = x;
 				carInput.y = y;
+				m_package_counter++;
 			}
 		});
 	}
+}
+
+
+void JniUdpReceiver::loop1Hz() {
+	connectionStatus.isUdpWorking = (m_package_counter > 0) ? true : false; 
+	m_package_counter = 0;
 }

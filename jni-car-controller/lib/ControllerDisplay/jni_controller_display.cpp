@@ -24,11 +24,11 @@
 #define NO_CONNECTION "<No Connection>"
 
 #define LABEL_TITLE "JNI CAR CONTROLLER"
-#define LABEL_IP "Target IP: "
-#define LABEL_BAT "BAT: "
-#define LABEL_X "X: "
-#define LABEL_Y "Y: "
-#define LABEL_UDP "UDP: "
+#define LABEL_IP "Base IP:"
+#define LABEL_BAT "BAT:"
+#define LABEL_X "X:"
+#define LABEL_Y "Y:"
+#define LABEL_UDP "UDP:"
 
 #define TEXT_USB "USB"
 #define TEXT_LOW "LOW"
@@ -89,7 +89,7 @@ void ControllerDisplay::setup() {
 	display.setCursor(IP_COL, VALUE_IP_Y);
 	display.print(m_target_ipv4.c_str());
 
-	// Draw connection label
+	// Draw UDP label
 	display.setCursor(UDP_COL, LABEL_UDP_Y);
 	display.print(LABEL_UDP);
 
