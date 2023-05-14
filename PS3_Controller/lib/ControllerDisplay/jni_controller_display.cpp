@@ -17,30 +17,32 @@
 #define LABEL_IP_Y 47
 #define VALUE_IP_Y LABEL_IP_Y + 10
 
-#define UDP_COL 102
-#define LABEL_UDP_Y 47
-#define VALUE_UDP_Y LABEL_UDP_Y + 10
+#define MODE_COL 98
+#define LABEL_MODE_Y 47
+#define VALUE_MODE_Y LABEL_MODE_Y + 10
 
 #define NO_CONNECTION "<No Connection>"
 
 #define LABEL_TITLE "JNI CAR PS3 CONTROL"
 #define LABEL_IP "Base IP:"
-#define LABEL_BAT "BAT:"
+#define LABEL_POWER "Power:"
 #define LABEL_X "X:"
 #define LABEL_Y "Y:"
-#define LABEL_UDP "UDP:"
+#define LABEL_MODE "Mode:"
 
 #define TEXT_LOW "LOW"
 #define TEXT_MED "MED"
 #define TEXT_HIGH "HIGH"
-#define TEXT_OK "OK"
-#define TEXT_NO "n/a"
+
+#define TEXT_OPERATIVE "OP"
+#define TEXT_PS3_WAITING "PS3?"
+#define TEXT_NETWORK_WAITING "NET?"
 
 static Adafruit_SH1107 display = Adafruit_SH1107(64, 128, &Wire);
 static GFXcanvas1 xCanvas = GFXcanvas1(COORDINATE_WIDTH, 10);
 static GFXcanvas1 yCanvas = GFXcanvas1(COORDINATE_WIDTH, 10);
-static GFXcanvas1 batCanvas = GFXcanvas1(TEXT_WIDTH, 10);
-static GFXcanvas1 udpCanvas = GFXcanvas1(TEXT_WIDTH, 10);
+static GFXcanvas1 powerCanvas = GFXcanvas1(TEXT_WIDTH, 10);
+static GFXcanvas1 modeCanvas = GFXcanvas1(TEXT_WIDTH, 10);
 
 ControllerDisplay::ControllerDisplay(const std::string& target_ipv4)
     : m_target_ipv4(target_ipv4) {
@@ -78,7 +80,7 @@ void ControllerDisplay::setup() {
 
 	// Draw battery label
 	display.setCursor(BAT_COL,LABELS_Y);
-	display.print(LABEL_BAT);
+	display.print(LABEL_POWER);
 
 	// Draw IP label
 	display.setCursor(IP_COL, LABEL_IP_Y);
@@ -89,8 +91,8 @@ void ControllerDisplay::setup() {
 	display.print(m_target_ipv4.c_str());
 
 	// Draw UDP label
-	display.setCursor(UDP_COL, LABEL_UDP_Y);
-	display.print(LABEL_UDP);
+	display.setCursor(MODE_COL, LABEL_MODE_Y);
+	display.print(LABEL_MODE);
 
 	display.display();
 }
@@ -121,36 +123,41 @@ void ControllerDisplay::loop10Hz() {
 	);
 
 	// Draw the battery status
-	batCanvas.fillScreen(0);
-	batCanvas.setCursor(0,0);
+	powerCanvas.fillScreen(0);
+	powerCanvas.setCursor(0,0);
 	if (powerStatus.batteryVoltage < 3.3) {
-		batCanvas.printf(TEXT_LOW);
+		powerCanvas.printf(TEXT_LOW);
 	}
 	else if (powerStatus.batteryVoltage < 3.5) {
-		batCanvas.printf(TEXT_MED);
+		powerCanvas.printf(TEXT_MED);
 	}
 	else {
-		batCanvas.printf(TEXT_HIGH);
+		powerCanvas.printf(TEXT_HIGH);
 	}
 	display.drawBitmap(
 		BAT_COL, VALUES_Y, 
-		batCanvas.getBuffer(), 
+		powerCanvas.getBuffer(), 
 		TEXT_WIDTH, 10, 
 		SH110X_WHITE, SH110X_BLACK
 	);
 
-	// Draw the UDP status
-	udpCanvas.fillScreen(0);
-	udpCanvas.setCursor(0,0);
-	if (connectionStatus.isUdpWorking) {
-		udpCanvas.printf(TEXT_OK);
+	// Draw the mode status
+	modeCanvas.fillScreen(0);
+	modeCanvas.setCursor(0,0);
+	if (connectionStatus.isControllerConnected){
+		if (connectionStatus.isBaseConnectionWorking) {
+			modeCanvas.printf(TEXT_OPERATIVE);
+		}
+		else {
+			modeCanvas.printf(TEXT_NETWORK_WAITING);
+		}
 	}
 	else {
-		udpCanvas.printf(TEXT_NO);
+		modeCanvas.printf(TEXT_PS3_WAITING);
 	}
 	display.drawBitmap(
-		UDP_COL, VALUE_UDP_Y, 
-		udpCanvas.getBuffer(), 
+		MODE_COL, VALUE_MODE_Y, 
+		modeCanvas.getBuffer(), 
 		TEXT_WIDTH, 10, 
 		SH110X_WHITE, SH110X_BLACK
 	);

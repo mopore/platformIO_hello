@@ -24,8 +24,11 @@ void InputController::setup(const char* esp32HostMac) {
 void InputController::loop100Hz() {
 	try {
 		m_ps3Controller.loop();
-		bool sentResult = m_udpSender.send(carInput.x, carInput.y);
-		connectionStatus.isUdpWorking = sentResult;
+		bool sentResult = false;
+		if (connectionStatus.isControllerConnected) {
+			sentResult = m_udpSender.send(carInput.x, carInput.y);
+		}
+		connectionStatus.isBaseConnectionWorking = sentResult;
 	}
 	catch (const std::exception& e) {
 		Serial.print("Exception: ");

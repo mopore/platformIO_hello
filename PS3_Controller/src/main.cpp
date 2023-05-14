@@ -46,9 +46,12 @@ void readPowerTask(void* pvParameters) {
 
 void setup() {
 	Serial.begin(115200);
+
 	connectionStatus.isWifiConnected = false;
-	connectionStatus.isUdpWorking = false;
 	setWifiStatusIP_v4(NO_IP);
+	connectionStatus.isBaseConnectionWorking = false;
+	connectionStatus.isControllerConnected = false;
+
 	char out_ip[MAX_IP_LENGTH];
 	connect_wifi(out_ip, WIFI_SSID, WIFI_PASS);
 	if (strcmp(out_ip, NO_IP) != 0) {

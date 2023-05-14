@@ -28,9 +28,11 @@ void JniPs3Controller::setup(const char* hostMacAddress) {
 	
 	Ps3.attachOnConnect([](){
 		Serial.println("PS3 controller connected");
+		connectionStatus.isControllerConnected = true;
 	});	
 	Ps3.attachOnDisconnect([](){
 		Serial.println("PS3 controller disconnected");
+		connectionStatus.isControllerConnected = false;
 	});
 
 	Ps3.attach([](){
