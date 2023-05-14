@@ -50,13 +50,13 @@ void setup() {
 	connectionStatus.isWifiConnected = false;
 	connectionStatus.isUdpWorking = false;
 	setWifiStatusIP_v4(NO_IP);
-
 	char out_ip[MAX_IP_LENGTH];
-	connect_wifi(out_ip, TALPA_SSID, TALPA_PASS);
+	connect_wifi(out_ip, WIFI_SSID, WIFI_PASS);
 	if (strcmp(out_ip, NO_IP) != 0) {
 		Serial.printf("Connected with IP address: %s\n", out_ip);
 		setWifiStatusIP_v4(out_ip);
 		connectionStatus.isWifiConnected = true;
+
 		xTaskCreate(displayTask, "displayTask", 4096, NULL, 1, NULL);
 		xTaskCreate(readInputTask, "readInputTask", 4096, NULL, 1, NULL);	
 		xTaskCreate(readPowerTask, "readPowerTask", 4096, NULL, 1, NULL);
