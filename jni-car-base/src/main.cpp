@@ -6,6 +6,8 @@
 #include "jni_wifi.h"
 #include "jni_udp_receiver.h"
 #include "jni_config.h"
+#include "jni_engine_control.h"
+
 
 #define FREQ_100HZ 10  // Every 10ms of 1000ms
 #define FREQ_10HZ 100  // Every 100ms of 1000ms
@@ -36,6 +38,22 @@ void displayTask(void* pvParameters) {
 }
 
 
+void controlEngineTask(void* pvParameters) {
+	const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_10_HZ);
+	
+	JniEngineControl& engineControl = JniEngineControl::getInstance();
+	engineControl.setup();
+	
+	while(true) {
+		// TODO Measure the delay between each execution
+		// Assumption: The execution shouldn't take too much time to make it necessary to time 
+		// the next call perfectly though.
+		engineControl.loop10Hz();
+		vTaskDelay(xFrequency);
+	}
+}
+
+
 void readPowerTask(void* pvParameters) {
 	const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_5Sec);
 	PowerReader powerReader;
@@ -61,6 +79,7 @@ void setup() {
 	
 		xTaskCreate(displayTask, "displayTask", 4096, NULL, 1, NULL);
 		xTaskCreate(readInputTask, "readInputTask", 4096, NULL, 1, NULL);	
+		xTaskCreate(controlEngineTask, "controlEngineTask", 4096, NULL, 1, NULL);
 		xTaskCreate(readPowerTask, "readPowerTask", 4096, NULL, 1, NULL);
 	}
 }
