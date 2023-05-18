@@ -5,6 +5,7 @@
 #include "jni_power_reader.h"
 #include "jni_wifi.h"
 #include "jni_config.h"
+#include "jni_engine_control.h"
 
 #define FREQ_100_HZ 10
 #define FREQ_10_HZ 100
@@ -29,6 +30,19 @@ void displayTask(void* pvParameters) {
 	
 	while(true) {
 		controllerDisplay.loop10Hz();
+		vTaskDelay(xFrequency);
+	}
+}
+
+
+void controlEngineTask(void* pvParameters) {
+	const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_10_HZ);
+	
+	JniEngineControl& engineControl = JniEngineControl::getInstance();
+	engineControl.setup();
+	
+	while(true) {
+		engineControl.loop10Hz();
 		vTaskDelay(xFrequency);
 	}
 }
@@ -59,6 +73,7 @@ void setup() {
 
 		xTaskCreate(displayTask, "displayTask", 4096, NULL, 1, NULL);
 		xTaskCreate(readInputTask, "readInputTask", 4096, NULL, 1, NULL);	
+		xTaskCreate(controlEngineTask, "controlEngineTask", 4096, NULL, 1, NULL);
 		xTaskCreate(readPowerTask, "readPowerTask", 4096, NULL, 1, NULL);
 	}
 
