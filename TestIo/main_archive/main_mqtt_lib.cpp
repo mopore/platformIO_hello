@@ -3,7 +3,7 @@
 #include "jni_config.h"
 #include "jni_mqtt_broker.h"
 
-JniMqttBroker broker = JniMqttBroker::getInstance();
+JniMqttBroker& broker = JniMqttBroker::getInstance();
 
 void setup() {
 	Serial.begin(115200);

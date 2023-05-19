@@ -2,7 +2,7 @@
 #include "jni_ps3_controller.h"
 #include "jni_config.h"
 
-JniPs3Controller ps3Controller = JniPs3Controller::getInstance();
+JniPs3Controller& ps3Controller = JniPs3Controller::getInstance();
 
 
 void setup() {
