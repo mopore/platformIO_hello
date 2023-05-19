@@ -39,17 +39,27 @@ void displayTask(void* pvParameters) {
 
 
 void controlEngineTask(void* pvParameters) {
-	const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_10_HZ);
-	
+	const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_10HZ);
 	JniEngineControl& engineControl = JniEngineControl::getInstance();
 	engineControl.setup();
 	
+	// auto previousWakeTime = xTaskGetTickCount();
+
 	while(true) {
 		// TODO Measure the delay between each execution
 		// Assumption: The execution shouldn't take too much time to make it necessary to time 
 		// the next call perfectly though.
 		engineControl.loop10Hz();
+		
+		// auto elapsedTime = xTaskGetTickCount() - previousWakeTime;
+
+		// // Print the elapsed time on the serial monitor
+		// Serial.print("Elapsed Time (ms): ");
+		// Serial.println(elapsedTime * portTICK_PERIOD_MS);
+
+		// previousWakeTime = xTaskGetTickCount();
 		vTaskDelay(xFrequency);
+
 	}
 }
 
