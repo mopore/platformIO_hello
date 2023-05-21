@@ -23,6 +23,26 @@ extern volatile PowerStatus powerStatus;
 
 
 typedef struct {
+	float temperatureCelsius;
+
+	// acceleration in m/s^2
+	float accelX;
+	float accelY;
+	float accelZ;
+
+	// angular velocity in rad/s
+	float gyroX;
+	float gyroY;
+	float gyroZ;
+
+	// front distance in mm
+	int16_t frontDistance;
+} CarSensors;
+
+extern volatile CarSensors carSensors;
+
+
+typedef struct {
 	bool isWifiConnected;
 	bool isUdpWorking;
 	char ip_v4[MAX_IP_LENGTH];

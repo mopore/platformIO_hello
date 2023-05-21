@@ -3,11 +3,8 @@
 
 
 volatile CarInput carInput;
-
-
 volatile PowerStatus powerStatus;
-
-
+volatile CarSensors carSensors;
 volatile ConnectionSatus connectionStatus;
 
 

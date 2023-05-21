@@ -7,6 +7,7 @@
 #include "jni_udp_receiver.h"
 #include "jni_config.h"
 #include "jni_engine_control.h"
+#include "jni_car_sensors_reader.h"
 
 
 #define FREQ_100HZ 10  // Every 10ms of 1000ms
@@ -15,62 +16,104 @@
 
 
 void readInputTask(void* pvParameters) {
-	const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_100HZ);
-	InputReader inputReader(UDP_RECEIVER_SOCKET_PORT);
+	try{
+		InputReader inputReader(UDP_RECEIVER_SOCKET_PORT);
+		inputReader.setup();
 
-	inputReader.setup();
-	while (true) {
-		inputReader.loop100Hz();
-		vTaskDelay(xFrequency);
+		const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_100HZ);
+		while (true) {
+			inputReader.loop100Hz();
+			vTaskDelay(xFrequency);
+		}
+	}
+	catch(const std::exception& e) {
+		Serial.println("Caught exception");
+		Serial.println(e.what());
 	}
 }
 
 
 void displayTask(void* pvParameters) {
-	const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_10HZ);
-	ControllerDisplay controllerDisplay;
+	try{
+		ControllerDisplay controllerDisplay;
+		controllerDisplay.setup();
 
-	controllerDisplay.setup();
-	while(true) {
-		controllerDisplay.loop10Hz();
-		vTaskDelay(xFrequency);
+		const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_10HZ);
+		while(true) {
+			controllerDisplay.loop10Hz();
+			vTaskDelay(xFrequency);
+		}
+	}
+	catch(const std::exception& e) {
+		Serial.println("Caught exception");
+		Serial.println(e.what());
 	}
 }
 
 
 void controlEngineTask(void* pvParameters) {
-	const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_10HZ);
-	JniEngineControl& engineControl = JniEngineControl::getInstance();
-	engineControl.setup();
-	
-	// auto previousWakeTime = xTaskGetTickCount();
-
-	while(true) {
-		// TODO Measure the delay between each execution
-		// Assumption: The execution shouldn't take too much time to make it necessary to time 
-		// the next call perfectly though.
-		engineControl.loop10Hz();
+	try{
+		JniEngineControl& engineControl = JniEngineControl::getInstance();
+		engineControl.setup();
 		
-		// auto elapsedTime = xTaskGetTickCount() - previousWakeTime;
+		const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_10HZ);
+		auto previousWakeTime = xTaskGetTickCount();
 
-		// // Print the elapsed time on the serial monitor
-		// Serial.print("Elapsed Time (ms): ");
-		// Serial.println(elapsedTime * portTICK_PERIOD_MS);
+		while(true) {
+			// TODO Measure the delay between each execution
+			// Assumption: The execution shouldn't take too much time to make it necessary to time 
+			// the next call perfectly though.
+			engineControl.loop10Hz();
+			
+			auto elapsedTime = xTaskGetTickCount() - previousWakeTime;
 
-		// previousWakeTime = xTaskGetTickCount();
-		vTaskDelay(xFrequency);
+			// Print the elapsed time on the serial monitor
+			Serial.print("Elapsed Time (ms): ");
+			Serial.println(elapsedTime * portTICK_PERIOD_MS);
 
+			previousWakeTime = xTaskGetTickCount();
+			vTaskDelay(xFrequency);
+		}
+	}
+	catch(const std::exception& e) {
+		Serial.println("Caught exception");
+		Serial.println(e.what());
+	}
+}
+
+
+void readSensorsTask(void* pvParameters) {
+	try{
+		JniCarSensorsReader& reader = JniCarSensorsReader::getInstance();
+		reader.setup();
+
+		const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_10HZ);
+		while(true) {
+			reader.loop10Hz();
+			vTaskDelay(xFrequency);
+		}
+	}
+	catch(const std::exception& e) {
+		Serial.println("Caught exception");
+		Serial.println(e.what());
 	}
 }
 
 
 void readPowerTask(void* pvParameters) {
-	const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_5Sec);
-	PowerReader powerReader;
-	powerReader.setup();
-	while (true) {
-		powerReader.updatePowerStatus();
-		vTaskDelay(xFrequency);
+	try{
+		PowerReader powerReader;
+		powerReader.setup();
+
+		const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_5Sec);
+		while (true) {
+			powerReader.updatePowerStatus();
+			vTaskDelay(xFrequency);
+		}
+	}
+	catch(const std::exception& e) {
+		Serial.println("Caught exception");
+		Serial.println(e.what());
 	}
 }
 
@@ -89,6 +132,7 @@ void setup() {
 	
 		xTaskCreate(displayTask, "displayTask", 4096, NULL, 1, NULL);
 		xTaskCreate(readInputTask, "readInputTask", 4096, NULL, 1, NULL);	
+		xTaskCreate(readSensorsTask, "readSensorsTaks", 4096, NULL, 1, NULL);	
 		xTaskCreate(controlEngineTask, "controlEngineTask", 4096, NULL, 1, NULL);
 		xTaskCreate(readPowerTask, "readPowerTask", 4096, NULL, 1, NULL);
 	}
