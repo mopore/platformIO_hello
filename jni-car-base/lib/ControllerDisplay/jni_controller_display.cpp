@@ -64,7 +64,8 @@ void ControllerDisplay::setup() {
 	// General setup
 	display.clearDisplay();
 	display.display();
-	display.setRotation(1);
+	// Set rotation to be upside down in landscape relative to display buttons.
+	display.setRotation(3);
 	display.setTextSize(1);
 	display.setTextColor(SH110X_WHITE);
 
