@@ -4,7 +4,7 @@
 #define THURST_MAX 180
 
 #define LEFT_FRONT_PIN 14
-#define LEFT_STOP 96
+#define LEFT_STOP 94
 #define LEFT_REVERSE false
 
 #define RIGHT_FRONT_PIN 12
@@ -14,7 +14,7 @@
 #define STEERING_PIN 6
 #define STEERING_MIN 49
 #define STEERING_MAX 139
-#define STEERING_CENTER (STEERING_MIN + STEERING_MAX) / 2
+#define STEERING_CENTER 94
 #define STEERING_REVERESE true
 
 
@@ -35,7 +35,6 @@ JniEngineControl::JniEngineControl() :
 
 
 void JniEngineControl::loop10Hz() {
-	// FIXME Remove me after testing
 	int16_t driveInput = carInput.y;
 	m_leftDrive.controlDrive(driveInput, m_pwm);
 	m_rightDrive.controlDrive(driveInput, m_pwm);
