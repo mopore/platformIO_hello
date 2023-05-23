@@ -55,7 +55,6 @@ void displayTask(void* pvParameters) {
 void controlEngineTask(void* pvParameters) {
 	try{
 		JniEngineControl& engineControl = JniEngineControl::getInstance();
-		engineControl.setup();
 		
 		const TickType_t xFrequency = pdMS_TO_TICKS(FREQ_10HZ);
 		auto previousWakeTime = xTaskGetTickCount();
