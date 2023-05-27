@@ -4,10 +4,6 @@
 			"path": "."
 		},
 		{
-			"name": "Hello_Example",
-			"path": "../../../Documents/PlatformIO/Projects/Hello_Example"
-		},
-		{
 			"name": "TestIo",
 			"path": "TestIo"
 		},
